@@ -3,83 +3,27 @@ import {
   BrowserRouter as Router,
   Route,
   Link,
-  Routes
+  Routes,
+  BrowserRouter,
 } from "react-router-dom";
+import Header from "./components/Header/Header";
+import Home from "./pages/Home/home";
+import Login from "./pages/Login/login";
+import Register from "./pages/Register/register";
 
-export default function App() {
+function App() {
   return (
-    <Router>
-      <div className="App">
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/movies">Movies</Link>
-            </li>
-            <li>
-              <Link to="/theaters">Theaters</Link>
-            </li>
-            <li>
-              <Link to="/events">Events</Link>
-            </li>
-            <li>
-              <Link to="/food">Food & Drinks</Link>
-            </li>
-            <li>
-              <Link to="/register">Sign in</Link>
-            </li>
-          </ul>
-        </nav>
+    <div>
+      <BrowserRouter>
+        <Header />
         <Routes>
-          <Route path="/movies">
-            <Movies />
-          </Route>
-          <Route path="/theaters">
-            <Theaters />
-          </Route>
-          <Route path="/events">
-            <Events />
-          </Route>
-          <Route path="/food">
-            <Food />
-          </Route>
-          <Route path="/register">
-            <SignIn />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
-      </div>
-    </Router>
+      </BrowserRouter>
+    </div>
   );
 }
 
-function Home() {
-  return <h2>Home</h2>;
-}
-
-function Movies() {
-  return <h2>Movies</h2>;
-}
-
-function Theaters() {
-  return <h2>Theaters</h2>;
-}
-
-function Events() {
-  return <h2>Events</h2>;
-}
-
-function Food() {
-  return <h2>Food & Drinks</h2>;
-}
-
-function SignIn() {
-  return <h2>Sign In</h2>;
-}
-
-
-
+export default App;
