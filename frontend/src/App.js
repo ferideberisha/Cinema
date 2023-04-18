@@ -10,6 +10,9 @@ import Header from "./components/Header/Header";
 import Home from "./pages/Home/home";
 import Login from "./pages/Login/login";
 import Register from "./pages/Register/register";
+import Movies from "./pages/Movies/movies";
+import Theaters from "./pages/Theaters/theaters";
+import Events from "./pages/Events/events";
 
 function App() {
   return (
@@ -20,6 +23,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/movies" element={<Movies />} />
+          <Route path="/theaters" element={<Theaters />} />
+          <Route path="/events" element={<Events />} />
         </Routes>
       </BrowserRouter>
     </div>
