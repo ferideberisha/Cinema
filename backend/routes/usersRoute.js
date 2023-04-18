@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 router.post("/register", async (req, res) => {
   try {
@@ -28,4 +29,42 @@ router.post("/register", async (req, res) => {
   }
 });
 
+router.post("/login", async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return res.send({
+        success: false,
+        message: "User does not exist!",
+      });
+    }
+
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+
+    if (!validPassword) {
+      return res.send({
+        success: false,
+        message: "Invalid password!",
+      });
+    }
+
+    const token = jwt.sign({ _id: user._id }, process.env.jwt_secret, {
+      expiresIn: "1d",
+    });
+
+    res.send({
+      success: true,
+      message: "User logged in successfully!",
+      data: token,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 module.exports = router;
