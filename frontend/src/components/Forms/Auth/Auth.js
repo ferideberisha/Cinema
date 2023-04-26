@@ -13,6 +13,16 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import MuiAlert from "@mui/material/Alert";
+import { LoginUser } from "../../../api/users";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { ShowLoading, HideLoading } from "../../../redux/loadersSlice";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function Copyright(props) {
   return (
@@ -35,16 +45,39 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Auth() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const formData = { email, password };
+    try {
+      dispatch(ShowLoading());
+      const response = await LoginUser(formData);
+      dispatch(HideLoading());
+      if (response.success) {
+        // Replaced message with Alert from Material-UI
+        <Alert severity="success">{response.message}</Alert>;
+        localStorage.setItem("token", response.data);
+        window.location.href = "/";
+      } else {
+        // Replaced message with Alert from Material-UI
+        <Alert severity="error">{response.message}</Alert>;
+      }
+    } catch (error) {
+      dispatch(HideLoading());
+      // Replaced message with Alert from Material-UI
+      <Alert severity="error">{error.message}</Alert>;
+    }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      // navigate("/");
+    }
+  }, [navigate]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -70,26 +103,33 @@ export default function Auth() {
             noValidate
             sx={{ mt: 1 }}
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  autoComplete="email"
+                  name="email"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  autoComplete="current-password"
+                  name="password"
+                  required
+                  fullWidth
+                  type="password"
+                  id="password"
+                  label="Password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              </Grid>
+            </Grid>
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
@@ -103,7 +143,7 @@ export default function Auth() {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
+              <Grid item xs={12}>
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
