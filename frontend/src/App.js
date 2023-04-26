@@ -26,6 +26,8 @@ function App() {
           <Route path="/movies" element={<Movies />} />
           <Route path="/theaters" element={<Theaters />} />
           <Route path="/events" element={<Events />} />
+          {/* Default Route */}
+          <Route path="*" element={<Home />} />
         </Routes>
       </BrowserRouter>
     </div>
