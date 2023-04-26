@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppBar } from "@mui/material";
@@ -17,6 +17,7 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { Link } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -85,6 +86,13 @@ const Header = () => {
   const handlePageClick = (page) => {
     navigate(`/${page.toLowerCase()}`);
   };
+  const isLoggedIn = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <AppBar position="static">
@@ -168,40 +176,62 @@ const Header = () => {
               />
             </Search>
           </Box>
+          <Box>
+            {isLoggedIn ? (
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton
+                    onClick={handleOpenUserMenu}
+                    sx={{ p: 0, color: "white" }}
+                  >
+                    <AccountCircleOutlinedIcon
+                      sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+                    />
+                  </IconButton>
+                </Tooltip>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton
-                onClick={handleOpenUserMenu}
-                sx={{ p: 0, color: "white" }}
-              >
-                <AccountCircleOutlinedIcon
-                  sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClick={handleCloseUserMenu}
+                >
+                  <MenuItem component={Link}>Profile</MenuItem>
+                  <MenuItem>Account</MenuItem>
+                  <MenuItem onClick={() => localStorage.removeItem("token")}>
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </Box>
+            ) : (
+              // Show Login/Register button when logged out
+              <>
+                <Button
+                  color="inherit"
+                  onClick={() => navigate("/login")}
+                  sx={{ mx: 2 }}
+                >
+                  Login
+                </Button>
+                <Button
+                  color="inherit"
+                  onClick={() => navigate("/register")}
+                  sx={{ mx: 2 }}
+                >
+                  Register
+                </Button>
+              </>
+            )}
           </Box>
         </Toolbar>
       </Container>
