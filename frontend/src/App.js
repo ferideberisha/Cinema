@@ -13,7 +13,7 @@ import Register from "./pages/Register/register";
 import Movies from "./pages/Movies/movies";
 import Theaters from "./pages/Theaters/theaters";
 import Events from "./pages/Events/events";
-
+import Admin from "./pages/Admin/index";
 function App() {
   return (
     <div>
@@ -26,6 +26,7 @@ function App() {
           <Route path="/movies" element={<Movies />} />
           <Route path="/theaters" element={<Theaters />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/admin" element={<Admin />} />
           {/* Default Route */}
           <Route path="*" element={<Home />} />
         </Routes>
