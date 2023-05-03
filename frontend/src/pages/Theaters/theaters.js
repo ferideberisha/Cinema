@@ -1,6 +1,26 @@
 import React, { useState, useEffect } from "react";
 import "./theaters.css";
 
+function Theaters() {
+  return (
+    <div>
+      <div>
+        <meta charSet="UTF-8" />
+        <title>theaters</title>
+      </div>
+      <div className="theaters-body theaters-page">
+        <h1>Select a movie and seats:</h1>
+        <MovieSelector className="theaters-movie-container" />
+        <TheaterSeats className="theaters-container" />
+        <p className="text">
+          You have selected <span id="count">0</span> seats for a price of $
+          <span id="total">0</span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function setMovieData(movieIndex, moviePrice) {
   localStorage.setItem("selectedMovieIndex", movieIndex);
   localStorage.setItem("selectedMoviePrice", moviePrice);
@@ -158,26 +178,6 @@ function TheaterSeats() {
         </div>
       </div>
     </div>
-  );
-}
-
-function Theaters() {
-  return (
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <title>theaters</title>
-      </head>
-      <body className="theaters-body theaters-page">
-        <h1>Select a movie and seats:</h1>
-        <MovieSelector className="theaters-movie-container" />
-        <TheaterSeats className="theaters-container" />
-        <p class="text">
-          You have selected <span id="count">0</span> seats for a price of $
-          <span id="total">0</span>
-        </p>
-      </body>
-    </html>
   );
 }
 

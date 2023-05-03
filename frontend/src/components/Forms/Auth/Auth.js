@@ -130,10 +130,7 @@ export default function Auth() {
                 />
               </Grid>
             </Grid>
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
             <Button
               type="submit"
               fullWidth
@@ -143,11 +140,6 @@ export default function Auth() {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs={12}>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
               <Grid item>
                 <Link
                   onClick={() => navigate("/register")}

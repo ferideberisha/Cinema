@@ -61,6 +61,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Header = () => {
   const pages = ["Movies", "Theaters", "Events"];
+  const [loggedIn, setLoggedIn] = useState(null);
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -85,13 +86,16 @@ const Header = () => {
   const handlePageClick = (page) => {
     navigate(`/${page.toLowerCase()}`);
   };
-  const isLoggedIn = localStorage.getItem("token");
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      navigate("/");
-    }
+    const loggedUser = localStorage.getItem("token");
+    setLoggedIn(Boolean(loggedUser));
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+  };
 
   return (
     <AppBar position="static">
@@ -176,7 +180,7 @@ const Header = () => {
             </Search>
           </Box>
           <Box>
-            {isLoggedIn ? (
+            {loggedIn ? (
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton
@@ -207,9 +211,7 @@ const Header = () => {
                 >
                   <MenuItem component={Link}>Profile</MenuItem>
                   <MenuItem>Account</MenuItem>
-                  <MenuItem onClick={() => localStorage.removeItem("token")}>
-                    Logout
-                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </Box>
             ) : (
