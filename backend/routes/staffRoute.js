@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const authMiddleware = require("../middleware/authMiddleware");
 const Staff = require("../models/staffModel");
+const staffController = require("../controller/staffController");
 
 router.post("/register", async (req, res) => {
   try {
@@ -68,5 +69,10 @@ router.post("/login", async (req, res) => {
     });
   }
 });
+
+router.get("/all", staffController.staff_list);
+router.get("/:id", staffController.staff_get);
+router.put("/:id", staffController.staff_update);
+router.delete("/:id", staffController.staff_delete);
 
 module.exports = router;
