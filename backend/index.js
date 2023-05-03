@@ -9,21 +9,14 @@ const staffRoute = require("./routes/staffRoute");
 const app = express();
 
 app.use(express.json());
-app.use("/api/users", usersRoute);
-app.use("/api/staff", staffRoute);
 
 app.use(cors());
 
 const db = process.env.MONGO_URI;
 const PORT = process.env.PORT || 5000;
 
-// Serve static assets from the build directory
-app.use(express.static(path.join(__dirname, "client", "build")));
-
-// Define the catch-all route
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-});
+app.use("/api/users", usersRoute);
+app.use("/api/staff", staffRoute);
 
 mongoose
   .connect(db)
