@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -47,13 +45,15 @@ const theme = createTheme();
 export default function Signup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [alert, setAlert] = useState(null);
+
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
     email: "",
     password: "",
-    agreeToTerms: false,
   });
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -62,17 +62,16 @@ export default function Signup() {
       const response = await RegisterUser(formData);
       dispatch(HideLoading());
       if (response.success) {
-        // Replaced message with Alert from Material-UI
-        <Alert severity="success">{response.message}</Alert>;
-        navigate("/login");
+        setAlert({ message: "User created successfully", severity: "success" });
+        // navigate("/login");
+      } else if (formData.email.length > 0) {
+        setAlert({ message: "Email already in use", severity: "error" });
       } else {
-        // Replaced message with Alert from Material-UI
-        <Alert severity="error">{response.message}</Alert>;
+        setAlert({ message: "User not created", severity: "error" });
       }
     } catch (error) {
       dispatch(HideLoading());
-      // Replaced message with Alert from Material-UI
-      <Alert severity="error">{error.message}</Alert>;
+      setAlert({ message: "Error", severity: "error" });
     }
   };
 
@@ -90,6 +89,20 @@ export default function Signup() {
     }
   }, [navigate]);
 
+  const handleAlertClose = () => {
+    setAlert(null);
+    navigate("/login");
+  };
+
+  useEffect(() => {
+    if (alert) {
+      const timer = setTimeout(() => {
+        handleAlertClose();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  });
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -102,6 +115,15 @@ export default function Signup() {
             alignItems: "center",
           }}
         >
+          {alert && (
+            <Alert
+              severity={alert.severity}
+              onClose={handleAlertClose}
+              sx={{ marginBottom: 3 }}
+            >
+              {alert.message}
+            </Alert>
+          )}
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -165,19 +187,6 @@ export default function Signup() {
                   onChange={handleInputChange}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      name="agreeToTerms"
-                      color="primary"
-                      checked={formData.agreeToTerms}
-                      onChange={handleInputChange}
-                    />
-                  }
-                  label="I agree to the Terms and Conditions"
-                />
-              </Grid>
             </Grid>
             <Button
               type="submit"
@@ -196,12 +205,6 @@ export default function Signup() {
               </Grid>
             </Grid>
           </Box>
-        </Box>
-        <Box mt={5}>
-          <Typography variant="body2" color="text.secondary" align="center">
-            {/* Replace the following line with Material-UI Alert */}
-            {/** Display error or success message */}
-          </Typography>
         </Box>
         <Box mt={5}>
           <Copyright />

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema(
+const staffSchema = new mongoose.Schema(
   {
     firstname: {
       type: String,
@@ -19,10 +19,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isAdmin: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("users", userSchema);
+const collectionName = "staff";
+
+const Staff = new mongoose.model("Staff", staffSchema, collectionName);
+module.exports = Staff;
