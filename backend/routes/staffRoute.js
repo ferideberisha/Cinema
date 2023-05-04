@@ -32,8 +32,9 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const staff = await Staff.findOne({ email: req.body.email });
+    const staff = await Staff.findOne({ email });
     if (!staff) {
       return res.send({
         success: false,
@@ -41,21 +42,31 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const validPassword = await bcrypt.compare(
-      req.body.password,
-      admin.password
-    );
-
-    if (!validPassword) {
-      return res.send({
-        success: false,
-        message: "Invalid password!",
-      });
-    }
-
-    const token = jwt.sign({ _id: admin._id }, process.env.jwt_secret, {
-      expiresIn: "1d",
+    bcrypt.compare(password, staff.password).then((isMatch) => {
+      if (!isMatch) return res.status(400).json({ msg: "Invalid password" });
     });
+
+    const token = jwt.sign(
+      { _id: staff._id },
+      process.env.jwt_secret,
+      {
+        expiresIn: "1d",
+      },
+      (err, token) => {
+        if (err) throw err;
+
+        res.json({
+          token,
+          user: {
+            id: staff.id,
+            firstname: staff.firstname,
+            lastname: staff.lastname,
+            email: staff.email,
+            isAdmin: true,
+          },
+        });
+      }
+    );
 
     res.send({
       success: true,
@@ -70,9 +81,17 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// staff routes
 router.get("/all", staffController.staff_list);
 router.get("/:id", staffController.staff_get);
 router.put("/:id", staffController.staff_update);
 router.delete("/:id", staffController.staff_delete);
+
+// movie routes
+router.post("/movie", staffController.movie_post);
+router.get("/movie/all", staffController.movie_list);
+router.get("/movie/:id", staffController.movie_get);
+router.delete("/movie/:id", staffController.movie_delete);
+router.put("/movie/:id", staffController.movie_update);
 
 module.exports = router;
