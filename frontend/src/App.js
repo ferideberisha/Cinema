@@ -1,12 +1,15 @@
 import React from "react";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
 import Header from "./components/Header/Header";
-import Home from "./pages/Home/home";
+import HomePage from "./home/HomePage";
+import SinglePage from "./components/watch/SinglePage";
 import Login from "./pages/Login/login";
 import Register from "./pages/Register/register";
 import Movies from "./pages/Movies/movies";
 import Theaters from "./pages/Theaters/theaters";
 import Events from "./pages/Events/events";
+import Footer from "./components/footer/Footer";
 
 function App() {
   return (
@@ -14,15 +17,15 @@ function App() {
       <BrowserRouter>
         <Header />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/singlepage/:id" element={<SinglePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/movies" element={<Movies />} />
           <Route path="/theaters" element={<Theaters />} />
           <Route path="/events" element={<Events />} />
-          {/* Default Route */}
-          <Route path="*" element={<Home />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </div>
   );

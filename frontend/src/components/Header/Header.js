@@ -98,7 +98,7 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed" sx={{ zIndex: 2 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <CameraRollOutlinedIcon
