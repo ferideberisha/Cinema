@@ -1,31 +1,33 @@
-import React from "react"
-import Slider from "react-slick"
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
-import HomeCard from "./HomeCard"
-import { homeData } from "../../dummyData"
+import React from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import HomeCard from "./HomeCard";
+import homeData from "../../homeData";
 
 const SampleNextArrow = (props) => {
-  const { onClick } = props
+  const { onClick } = props;
   return (
-    <div className='control-btn' onClick={onClick}>
-      <button className='next'>
-        <i class='fa fa-chevron-right'></i>
+    <div className="control-btn" onClick={onClick}>
+      <button className="next">
+        <i className="fa fa-chevron-right"></i>
       </button>
     </div>
-  )
-}
+  );
+};
 const SamplePrevArrow = (props) => {
-  const { onClick } = props
+  const { onClick } = props;
   return (
-    <div className='control-btn' onClick={onClick}>
-      <button className='prev'>
-        <i class='fa fa-chevron-left'></i>
+    <div className="control-btn" onClick={onClick}>
+      <button className="prev">
+        <i className="fa fa-chevron-left"></i>
       </button>
     </div>
-  )
-}
-const Home = ({ items }) => {
+  );
+};
+const Home = () => {
+  const homeContent = homeData.filter((item) => item.list === false);
+
   const settings = {
     dots: false,
     infinite: true,
@@ -34,22 +36,19 @@ const Home = ({ items }) => {
     slidesToScroll: 1,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
-  }
+  };
   return (
     <>
-      <div className='homeContainer'>
+      <div className="homeContainer">
         <Slider {...settings}>
-          {homeData.map((homeData) => {
-            return (
-              <>
-                <HomeCard key={homeData.id} item={homeData} />
-              </>
-            )
-          })}
+          {homeContent &&
+            homeContent.map((item, index) => {
+              return <HomeCard key={index} item={item} />;
+            })}
         </Slider>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
