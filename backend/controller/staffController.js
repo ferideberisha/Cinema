@@ -1,6 +1,91 @@
 const Staff = require("../models/staffModel");
 const Movie = require("../models/movieModel");
 
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+const staff_login = (req, res) => {
+  const { email, password } = req.body;
+
+  Staff.findOne({ email }).then((staff) => {
+    if (!staff)
+      return res.status(409).json({ msg: "staff member does not exist" });
+
+    bcrypt.compare(password, staff.password).then((isMatch) => {
+      if (!isMatch) return res.status(400).json({ msg: "Invalid password" });
+
+      jwt.sign(
+        { id: staff.id },
+        process.env.jwt_secret,
+        { expiresIn: 3600 },
+        (err, token) => {
+          if (err) {
+            throw err;
+          }
+
+          res.json({
+            token,
+            user: {
+              id: staff.id,
+              firstname: staff.firstname,
+              lastname: staff.lastname,
+              email: staff.email,
+              isAdmin: staff.isAdmin,
+              isStaff: true,
+            },
+          });
+        }
+      );
+    });
+  });
+};
+
+const staff_register = (req, res) => {
+  const { firstname, lastname, email, password, isAdmin } = req.body;
+  Staff.findOne({ email }).then((staff) => {
+    if (staff) return res.status(409).json({ msg: "Email already registered" });
+
+    const newStaff = new Staff({
+      firstname,
+      lastname,
+      email,
+      password,
+      isAdmin,
+    });
+
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(newStaff.password, salt, (err, hash) => {
+        if (err)
+          return res.status(400).json({ msg: "Invalid password received" });
+
+        newStaff.password = hash;
+
+        newStaff.save().then((staff) => {
+          jwt.sign(
+            { id: staff.id },
+            process.env.jwt_secret,
+            { expiresIn: 3600 },
+            (err, token) => {
+              if (err) throw err;
+
+              res.json({
+                token,
+                user: {
+                  id: staff.id,
+                  firstname: staff.firstname,
+                  lastname: staff.lastname,
+                  email: staff.email,
+                  isStaff: true,
+                },
+              });
+            }
+          );
+        });
+      });
+    });
+  });
+};
+
 const staff_list = (req, res) => {
   Staff.find().then((staff) => res.json(staff));
 };
@@ -115,6 +200,8 @@ const movie_update = async (req, res, next) => {
 };
 
 module.exports = {
+  staff_register,
+  staff_login,
   staff_list,
   staff_get,
   staff_delete,
