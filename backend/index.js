@@ -2,8 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv").config();
-const usersRoute = require("./routes/usersRoute");
-const staffRoute = require("./routes/staffRoute");
+const usersRoute = require("./routes/users/usersRoute");
+const staffRoute = require("./routes/staff/staffRoute");
 
 const app = express();
 
