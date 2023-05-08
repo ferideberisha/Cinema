@@ -19,3 +19,12 @@ export const LoginUser = async (payload) => {
     return error.response;
   }
 };
+
+export const LoginStaff = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/api/staff/login", payload);
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
