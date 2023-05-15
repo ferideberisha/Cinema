@@ -52,5 +52,36 @@ router.post("/update-movie", authMiddleware, async (req, res) => {
     });
   }
 });
+// delete a movie
+router.post("/delete-movie", authMiddleware, async (req, res) => {
+  try {
+    await Movie.findByIdAndDelete(req.body.movieId);
+    res.send({
+      success: true,
+      message: "Movie deleted successfully",
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 
+// get a movie by id
+router.get("/get-movie-by-id/:id", async (req, res) => {
+  try {
+    const movie = await Movie.findById(req.params.id);
+    res.send({
+      success: true,
+      message: "Movie fetched successfully",
+      data: movie,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 module.exports = router;
