@@ -57,6 +57,8 @@ function MovieForm({
       width={800}
     >
       <Form layout="vertical" onFinish={onFinish} initialValues={selectedMovie}>
+       onFinish=(onFinish)
+       
         <Row gutter={16}>
           <Col span={24}>
             <Form.Item label="Movie Name" name="title">

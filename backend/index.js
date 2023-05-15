@@ -3,11 +3,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv").config();
 const usersRoute = require("./routes/usersRoute");
+const moviesRoute =require("./routes/moviesRoute");
 const app = express();
 
 app.use(express.json());
 app.use("/api/users", usersRoute);
-
+app.use("/api/movies", moviesRoute);
 app.use(cors());
 
 const db = process.env.MONGO_URI;
