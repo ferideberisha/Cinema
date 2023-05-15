@@ -4,7 +4,7 @@ import Button from "../../components/Button";
 import { useDispatch } from "react-redux";
 import { HideLoading, ShowLoading } from "../../redux/loadersSlice";
 import { AddMovie, UpdateMovie } from "../../api/movies";
-
+import moment from "moment";
 
 function MovieForm({
   showMovieFormModal,
@@ -14,7 +14,11 @@ function MovieForm({
   getData,
   formType,
 }) {
- 
+  if (selectedMovie) {
+    selectedMovie.releaseDate = moment(selectedMovie.releaseDate).format(
+      "YYYY-MM-DD"
+    );
+  }
 
   const dispatch = useDispatch();
   const onFinish = async (values) => {
@@ -32,7 +36,7 @@ function MovieForm({
       }
 
       if (response.success) {
- 
+        getData();
         message.success(response.message);
         setShowMovieFormModal(false);
       } else {
@@ -57,8 +61,6 @@ function MovieForm({
       width={800}
     >
       <Form layout="vertical" onFinish={onFinish} initialValues={selectedMovie}>
-       onFinish=(onFinish)
-       
         <Row gutter={16}>
           <Col span={24}>
             <Form.Item label="Movie Name" name="title">
