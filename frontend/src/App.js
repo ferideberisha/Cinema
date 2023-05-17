@@ -10,6 +10,7 @@ import Movies from "./pages/Movies/movies";
 import Theaters from "./pages/Theaters/theaters";
 import Events from "./pages/Events/events";
 import Footer from "./components/footer/Footer";
+import Admin from "./pages/Admin/index";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/movies" element={<Movies />} />
           <Route path="/theaters" element={<Theaters />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
         <Footer />
       </BrowserRouter>

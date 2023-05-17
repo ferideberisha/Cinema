@@ -4,11 +4,12 @@ const cors = require("cors");
 const dotenv = require("dotenv").config();
 const usersRoute = require("./routes/users/usersRoute");
 const staffRoute = require("./routes/staff/staffRoute");
+const moviesRoute =require("./routes/moviesRoute");
 
 const app = express();
 
 app.use(express.json());
-
+app.use("/api/movies", moviesRoute);
 app.use(cors());
 
 const db = process.env.MONGO_URI;
