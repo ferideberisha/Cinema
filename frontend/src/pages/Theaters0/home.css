@@ -1,0 +1,120 @@
+.home {
+  margin: 0;
+  background: #242333;
+  color: white;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.home .slider {
+  width: 100%;
+}
+
+.home .slider input {
+  display: none;
+}
+
+.home .button1 {
+  background-color: #413b52;
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin-top: 20px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.home .button1:hover {
+  background-color: #292432;
+}
+
+.home .button1:focus {
+  outline: none;
+  box-shadow: 0px 0px 0px 3px #dddddd24;
+}
+
+.home .testimonials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 310px;
+  perspective: 1000px;
+  overflow: hidden;
+}
+
+.home .testimonials .item {
+  background-image: url(./Theater1.png);
+  background-size: cover;
+  background-position: center;
+  width: 300px;
+  padding: 30px;
+  border-radius: 5px;
+  background-color: #21262d;
+  position: absolute;
+  border: 3px solid white;
+  top: 0;
+  transition: transform 0.4s;
+  box-sizing: border-box;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  user-select: none;
+  cursor: pointer;
+  left: calc(50% - 150px);
+}
+
+.home .testimonials .item h1 img {
+  max-width: 100%;
+  height: auto;
+}
+  
+  #t-1:checked ~ .testimonials label[for="t-3"],
+  #t-2:checked ~ .testimonials label[for="t-4"],
+  #t-3:checked ~ .testimonials label[for="t-5"],
+  #t-4:checked ~ .testimonials label[for="t-1"],
+  #t-5:checked ~ .testimonials label[for="t-2"]{
+	  transform: translate3d(600px, 0, -180px) rotateY(-25deg);
+	  z-index: 2;
+  }
+
+  #t-1:checked ~ .testimonials label[for="t-2"],
+  #t-2:checked ~ .testimonials label[for="t-3"],
+  #t-3:checked ~ .testimonials label[for="t-4"],
+  #t-4:checked ~ .testimonials label[for="t-5"],
+  #t-5:checked ~ .testimonials label[for="t-1"]{
+	  transform: translate3d(300px, 0, -90px) rotateY(-15deg);
+	  z-index: 3;
+  }
+
+  #t-2:checked ~ .testimonials label[for="t-1"],
+  #t-3:checked ~ .testimonials label[for="t-2"],
+  #t-4:checked ~ .testimonials label[for="t-3"],
+  #t-5:checked ~ .testimonials label[for="t-4"],
+  #t-1:checked ~ .testimonials label[for="t-5"]{
+	  transform: translate3d(-300px, 0, -90px) rotateY(15deg);
+	  z-index: 3;
+  }
+
+  #t-3:checked ~ .testimonials label[for="t-1"],
+  #t-4:checked ~ .testimonials label[for="t-2"],
+  #t-5:checked ~ .testimonials label[for="t-3"],
+  #t-2:checked ~ .testimonials label[for="t-5"],
+  #t-1:checked ~ .testimonials label[for="t-4"]{
+	  transform: translate3d(-600px, 0, -180px) rotateY(25deg);
+	
+  }
+
+  #t-1:checked ~ .testimonials label[for="t-1"],
+  #t-2:checked ~ .testimonials label[for="t-2"],
+  #t-3:checked ~ .testimonials label[for="t-3"],
+  #t-4:checked ~ .testimonials label[for="t-4"],
+  #t-5:checked ~ .testimonials label[for="t-4"],
+  #t-5:checked ~ .testimonials label[for="t-5"]{
+	
+	z-index: 4;
+}  
