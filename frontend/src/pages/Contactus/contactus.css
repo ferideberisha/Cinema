@@ -1,0 +1,112 @@
+.modalBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400;
+    border-radius: 6px;
+    border: 0;
+    width: 65%;
+    height: 70%;
+    padding: 0;
+    display: flex;
+}
+
+.leftContact {
+    width: 50%;
+    height: 100%;
+    background-color: white;
+    padding: 5%;
+}
+
+.leftContact h2 {
+    text-align: center;
+    color: #3066BE;
+    padding-bottom: 5%;
+}
+
+.contactInput {
+    padding-bottom: 5%;
+}
+
+.rightContact {
+    width: 50%;
+    height: 100%;
+    background-color: #1976D2;
+}
+
+.rightContact h3 {
+    color: white;
+}
+
+.info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3%;
+}
+
+.info h3 {
+    padding-left: 10px;
+}
+
+.socialMediaList {
+    position: relative;
+    font-size: 22px;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.socialMediaList a .icon {
+    color: #fff;
+}
+
+.socialMediaList a {
+    position: relative;
+    display: inline-block;
+    height: 60px;
+    width: 60px;
+    margin: 10px 3px;
+    line-height: 60px;
+    border-radius: 50%;
+    color: #fff;
+    background-color: rgb(27, 27, 27);
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+    background-color: #1976D2;
+}
+
+.socialMediaList a:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    opacity: 0;
+    box-shadow: 0 0 0 1px #fff;
+    transition: all .2s ease-in-out;
+}
+
+.socialMediaList a:hover {
+    background-color: #fff;
+}
+
+.socialMediaList a:hover:after {
+    opacity: 1;
+    transform: scale(1.12);
+    transition-timing-function: cubic-bezier(0.37, 0.74, 0.15, 1.65);
+}
+
+.socialMediaList a:hover .icon {
+    color: #000;
+}
+
+.icon {
+    position: relative;
+    top: 9%;
+}
