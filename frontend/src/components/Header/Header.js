@@ -1,23 +1,24 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AppBar } from "@mui/material";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
+import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Container,
+  Button,
+  Tooltip,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
 import CameraRollOutlinedIcon from "@mui/icons-material/CameraRollOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import { Link } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -49,7 +50,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -60,8 +60,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Header = () => {
-  const pages = ["Movies", "Theaters", "Events"];
+  const pages = ["Movies", "Theaters", "Events", "Search"];
   const [loggedIn, setLoggedIn] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false); // New state variable
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -71,6 +72,7 @@ const Header = () => {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -88,13 +90,27 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const loggedUser = localStorage.getItem("token");
-    setLoggedIn(Boolean(loggedUser));
+    const userToken = localStorage.getItem("userToken");
+    const staffToken = localStorage.getItem("staffToken");
+
+    if (userToken) {
+      setLoggedIn(true);
+      setIsAdmin(false);
+    } else if (staffToken) {
+      setLoggedIn(true);
+      setIsAdmin(true);
+    } else {
+      setLoggedIn(false);
+      setIsAdmin(false);
+    }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("staffToken");
     setLoggedIn(false);
+    setIsAdmin(false);
+    navigate("/");
   };
 
   return (
@@ -121,7 +137,6 @@ const Header = () => {
           >
             MOVIETICKETZ
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -130,34 +145,15 @@ const Header = () => {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
+              sx={{ marginRight: "auto" }}
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
           </Box>
+
+          <CameraRollOutlinedIcon
+            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+          />
 
           <Box sx={{ display: "flex", flexGrow: 1, alignItems: "center" }}>
             {pages.map((page) => (
@@ -169,54 +165,72 @@ const Header = () => {
                 {page}
               </Button>
             ))}
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-              />
-            </Search>
           </Box>
-          <Box>
+          <Box sx={{ display: "flex" }}>
+            {loggedIn && isAdmin && (
+              <Box sx={{ flexGrow: 0 }}>
+                <Button
+                  component={Link}
+                  to="/staff/dashboard"
+                  variant="contained"
+                  color="primary"
+                  sx={{ mx: 2 }}
+                >
+                  Dashboard
+                </Button>
+              </Box>
+            )}
+
+            {loggedIn && !isAdmin && (
+              <Box sx={{ flexGrow: 0 }}>
+                <Button
+                  component={Link}
+                  to="/user/dashboard"
+                  variant="contained"
+                  color="primary"
+                  sx={{ mx: 2 }}
+                >
+                  Dashboard
+                </Button>
+              </Box>
+            )}
             {loggedIn ? (
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton
                     onClick={handleOpenUserMenu}
-                    sx={{ p: 0, color: "white" }}
+                    sx={{ p: -2, color: "white" }}
                   >
                     <AccountCircleOutlinedIcon
                       sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
                     />
                   </IconButton>
                 </Tooltip>
-
-                <Menu
-                  sx={{ mt: "45px" }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClick={handleCloseUserMenu}
-                >
-                  <MenuItem component={Link}>Profile</MenuItem>
-                  <MenuItem>Account</MenuItem>
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                </Menu>
               </Box>
+            ) : null}
+
+            {loggedIn ? (
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <MenuItem>Account</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
             ) : (
-              // Show Login/Register button when logged out
-              <>
+              <Box>
                 <Button
                   color="inherit"
                   onClick={() => navigate("/login")}
@@ -231,7 +245,7 @@ const Header = () => {
                 >
                   Register
                 </Button>
-              </>
+              </Box>
             )}
           </Box>
         </Toolbar>
@@ -239,4 +253,5 @@ const Header = () => {
     </AppBar>
   );
 };
+
 export default Header;
