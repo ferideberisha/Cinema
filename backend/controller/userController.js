@@ -2,6 +2,15 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const generateUserToken = (userId) => {
+  const userToken = jwt.sign(
+    { id: userId, role: "user" },
+    process.env.USER_JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+  return userToken;
+};
+
 const user_register = (req, res) => {
   const { firstname, lastname, email, password } = req.body;
 
@@ -25,25 +34,18 @@ const user_register = (req, res) => {
         newUser.password = hash;
 
         newUser.save().then((user) => {
-          jwt.sign(
-            { id: user.id },
-            process.env.jwt_secret,
-            { expiresIn: 3600 },
-            (err, token) => {
-              if (err) throw err;
+          const userToken = generateUserToken(user.id); // Generate a user token
 
-              res.json({
-                token,
-                user: {
-                  id: user.id,
-                  firstname: user.firstname,
-                  lastname: user.lastname,
-                  email: user.email,
-                  isAdmin: false,
-                },
-              });
-            }
-          );
+          res.json({
+            token: userToken,
+            user: {
+              id: user.id,
+              firstname: user.firstname,
+              lastname: user.lastname,
+              email: user.email,
+              isAdmin: false,
+            },
+          });
         });
       });
     });
@@ -61,7 +63,7 @@ const user_login = (req, res) => {
 
       jwt.sign(
         { id: user.id },
-        process.env.jwt_secret,
+        process.env.USER_JWT_SECRET,
         { expiresIn: 3600 },
         (err, token) => {
           if (err) throw err;

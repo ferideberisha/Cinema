@@ -4,40 +4,13 @@ const Movie = require("../models/movieModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const staff_login = (req, res) => {
-  const { email, password } = req.body;
-
-  Staff.findOne({ email }).then((staff) => {
-    if (!staff)
-      return res.status(409).json({ msg: "staff member does not exist" });
-
-    bcrypt.compare(password, staff.password).then((isMatch) => {
-      if (!isMatch) return res.status(400).json({ msg: "Invalid password" });
-
-      jwt.sign(
-        { id: staff.id },
-        process.env.jwt_secret,
-        { expiresIn: 3600 },
-        (err, token) => {
-          if (err) {
-            throw err;
-          }
-
-          res.json({
-            token,
-            user: {
-              id: staff.id,
-              firstname: staff.firstname,
-              lastname: staff.lastname,
-              email: staff.email,
-              isAdmin: staff.isAdmin,
-              isStaff: true,
-            },
-          });
-        }
-      );
-    });
-  });
+const generateStaffToken = (staffId) => {
+  const staffToken = jwt.sign(
+    { id: staffId, role: "staff" },
+    process.env.STAFF_JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+  return staffToken;
 };
 
 const staff_register = (req, res) => {
@@ -61,31 +34,59 @@ const staff_register = (req, res) => {
         newStaff.password = hash;
 
         newStaff.save().then((staff) => {
-          jwt.sign(
-            { id: staff.id },
-            process.env.jwt_secret,
-            { expiresIn: 3600 },
-            (err, token) => {
-              if (err) throw err;
+          const staffToken = generateStaffToken(staff.id); // Generate a staff token
 
-              res.json({
-                token,
-                user: {
-                  id: staff.id,
-                  firstname: staff.firstname,
-                  lastname: staff.lastname,
-                  email: staff.email,
-                  isStaff: true,
-                },
-              });
-            }
-          );
+          res.json({
+            token: staffToken,
+            user: {
+              id: staff.id,
+              firstname: staff.firstname,
+              lastname: staff.lastname,
+              email: staff.email,
+              isStaff: true,
+            },
+          });
         });
       });
     });
   });
 };
 
+const staff_login = (req, res) => {
+  const { email, password } = req.body;
+
+  Staff.findOne({ email }).then((staff) => {
+    if (!staff)
+      return res.status(409).json({ msg: "staff member does not exist" });
+
+    bcrypt.compare(password, staff.password).then((isMatch) => {
+      if (!isMatch) return res.status(400).json({ msg: "Invalid password" });
+
+      jwt.sign(
+        { id: staff.id },
+        process.env.STAFF_JWT_SECRET,
+        { expiresIn: 3600 },
+        (err, token) => {
+          if (err) {
+            throw err;
+          }
+
+          res.json({
+            token,
+            user: {
+              id: staff.id,
+              firstname: staff.firstname,
+              lastname: staff.lastname,
+              email: staff.email,
+              isAdmin: staff.isAdmin,
+              isStaff: true,
+            },
+          });
+        }
+      );
+    });
+  });
+};
 const staff_list = (req, res) => {
   Staff.find().then((staff) => res.json(staff));
 };

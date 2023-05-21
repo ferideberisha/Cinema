@@ -36,13 +36,16 @@ export default function Auth() {
       let response;
       if (email.endsWith("@staff.com")) {
         response = await LoginStaff(formData);
+        localStorage.setItem("staffToken", response.token); // Store staff token
       } else {
         response = await LoginUser(formData);
+        localStorage.setItem("userToken", response.token); // Store user token
       }
       dispatch(HideLoading());
+
+      console.log(response);
       if (response.token) {
         <Alert severity="success">{response.message}</Alert>;
-        localStorage.setItem("token", response.data);
         window.location.href = "/";
       } else {
         <Alert severity="error">{response.message}</Alert>;
