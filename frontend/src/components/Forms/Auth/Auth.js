@@ -1,4 +1,3 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -6,61 +5,99 @@ import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import MuiAlert from "@mui/material/Alert";
-import { LoginStaff, LoginUser } from "../../../api/users";
-import { useDispatch } from "react-redux";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { Typography } from "@mui/material";
+import Container from "@mui/material/Container";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import api from "../../../api/axios";
+import MuiAlert from "@mui/material/Alert";
+import { useDispatch } from "react-redux";
 import { ShowLoading, HideLoading } from "../../../redux/loadersSlice";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+function Copyright(props) {
+  return (
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
+      {"Copyright © "}
+      <Link color="inherit" href="https://mui.com/">
+        MOVIETICKETZ
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
+
 export default function Auth() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [alert, setAlert] = useState(null);
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-    const formData = { email, password };
+  const { login_user } = useAuthContext();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(email, password);
+    const route = email.endsWith("@staff.com")
+      ? "/api/staff/login"
+      : "/api/users/login";
+    const data = { email, password };
     try {
       dispatch(ShowLoading());
-      let response;
-      if (email.endsWith("@staff.com")) {
-        response = await LoginStaff(formData);
-        localStorage.setItem("staffToken", response.token); // Store staff token
-      } else {
-        response = await LoginUser(formData);
-        localStorage.setItem("userToken", response.token); // Store user token
-      }
+
+      const response = await api.post(route, data);
+      console.log(response.data);
+      login_user(response.data);
       dispatch(HideLoading());
 
-      console.log(response);
-      if (response.token) {
-        <Alert severity="success">{response.message}</Alert>;
-        window.location.href = "/";
+      if (response.data.token) {
+        setAlert({
+          message: "Logged in successfully",
+          severity: "success",
+        });
       } else {
-        <Alert severity="error">{response.message}</Alert>;
+        setAlert({
+          message: "Log in unsuccessful",
+          severity: "error",
+        });
       }
-    } catch (error) {
+    } catch (err) {
       dispatch(HideLoading());
-      <Alert severity="error">{error.message}</Alert>;
+      setAlert({
+        message: "Error",
+        severity: "error",
+      });
     }
   };
 
+  const handleAlertClose = () => {
+    setAlert(null);
+    navigate("/");
+  };
+
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      // navigate("/");
+    if (alert) {
+      const timer = setTimeout(() => {
+        handleAlertClose();
+      }, 1500);
+      return () => clearTimeout(timer);
     }
-  }, [navigate]);
+  });
 
   return (
     <ThemeProvider theme={createTheme()}>
@@ -68,62 +105,74 @@ export default function Auth() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 5,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          {alert && (
+            <Alert
+              severity={alert.severity}
+              onClose={handleAlertClose}
+              sx={{ marginBottom: 3 }}
+            >
+              {alert.message}
+            </Alert>
+          )}
+          <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Box component="form" onSubmit={handleFormSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                />
-              </Grid>
-            </Grid>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+            />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+            />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Log In
             </Button>
-            <Grid container justifyContent="flex-end">
+            <Grid container>
               <Grid item>
-                <Link href="/register" variant="body2">
-                  Don't have an account? Sign up
+                <Link
+                  onClick={() => navigate("/register")}
+                  color="secondary.main"
+                  href="#"
+                  variant="body2"
+                >
+                  {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
           </Box>
+        </Box>
+        <Box mt={5}>
+          <Copyright />
         </Box>
       </Container>
     </ThemeProvider>
