@@ -11,18 +11,16 @@ import Grid from "@mui/material/Grid";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 import StaffRoutes from "./routes/staff.route";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 // Import the necessary views/components for the movie ticket booking app admin dashboard
-import UserList from "./views/UserList/UserList";
-import AddMovie from "./views/AddMovie/AddMovie";
-import AddShow from "./views/AddShow/AddShow";
-import AddTheater from "./views/AddTheater/AddTheater";
-import DeleteMovie from "./views/DeleteMovie/DeleteMovie";
-import EditMovie from "./views/EditMovie/EditMovie";
-import MovieList from "./views/MovieList/MovieList";
-import ShowList from "./views/ShowList/ShowList";
-import EditTheater from "./views/EditTheater/EditTheater";
-import DeleteTheater from "./views/DeleteTheater/DeleteTheater";
+import Profile from "./views/Profile/Profile";
+import AddMovie from "./views/Admin/AddMovie/AddMovie";
+import AddTheater from "./views/Admin/AddTheater/AddTheater";
+import AddShow from "./views/Admin/AddShow/AddShow";
+import UserList from "./views/Admin/UserList/UserList";
+import ShowList from "./views/Admin/ShowList/ShowList";
+import Messages from "./views/Admin/Messages/Messages";
 
 const drawerWidth = 220;
 
@@ -59,6 +57,8 @@ function DashboardContent(props) {
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const { user } = useAuthContext();
 
   const navigate = useNavigate();
   const [option, setOption] = React.useState(props.option);
@@ -103,16 +103,13 @@ function DashboardContent(props) {
         >
           <Container maxWidth="xl" sx={{ mx: 0, mt: 2, mb: 0 }}>
             <Grid container spacing={3}>
-              {/* Add the necessary conditions for rendering the desired components */}
-              {option === "/add-movie" && <AddMovie />}
-              {option === "/edit-movie" && <EditMovie />}
-              {option === "/delete-movie" && <DeleteMovie />}
-              {option === "/users" && <UserList />}
-              {option === "/add-theater" && <AddTheater />}
-              {option === "/edit-theater" && <EditTheater />}
-              {option === "/delete-theater" && <DeleteTheater />}
-              {option === "/add-show" && <AddShow />}
-              {option === "/show-list" && <ShowList />}
+              {option === "" && <Profile />}
+              {user.isAdmin && option === "/add-movie" && <AddMovie />}
+              {user.isAdmin && option === "/add-theater" && <AddTheater />}
+              {user.isAdmin && option === "/add-show" && <AddShow />}
+              {user.isAdmin && option === "/view-users" && <UserList />}
+              {user.isAdmin && option === "/show-list" && <ShowList />}
+              {user.isAdmin && option === "/messages" && <Messages />}
             </Grid>
           </Container>
         </Box>

@@ -1,12 +1,11 @@
 const messages = require("../models/contactUsModel");
 
 const add_message = (req, res) => {
-  const { firstname, lastname, email, message, read, archive } = req.body;
+  const { name, email, message, read, archive } = req.body;
   console.log(req.body);
 
   const newMessage = new messages({
-    firstname,
-    lastname,
+    name,
     email,
     message,
     read,

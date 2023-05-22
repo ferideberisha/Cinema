@@ -109,9 +109,6 @@
   letter-spacing: 2px;
   transition: 0.5s;
 }
-.mragin {
-  margin-top: 50%;
-}
 @media only screen and (max-width: 768px) {
   .homeContainer h1 {
     font-size: 50px;
