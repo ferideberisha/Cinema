@@ -9,11 +9,11 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import api from "../../../api/axios";
 import { useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import MuiAlert from "@mui/material/Alert";
-import { RegisterUser } from "../../../api/users";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { ShowLoading, HideLoading } from "../../../redux/loadersSlice";
@@ -60,20 +60,24 @@ export default function Signup() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(formData);
 
     try {
       dispatch(ShowLoading());
-      const response = await RegisterUser(formData);
+      console.log(formData);
+      const response = await api.post("/api/users/register", formData);
+      console.log(response);
+
       dispatch(HideLoading());
 
-      if (response.token) {
+      if (response.data.token) {
         setAlert({
           message: "User created successfully",
           severity: "success",
         });
       } else if (
-        response.msg &&
-        response.msg.includes("Email already in use")
+        response.data.msg &&
+        response.data.msg.includes("Email already in use")
       ) {
         setAlert({
           message: "Email already in use",
@@ -93,12 +97,6 @@ export default function Signup() {
       });
     }
   };
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      // navigate("/");
-    }
-  }, [navigate]);
 
   const handleAlertClose = () => {
     setAlert(null);

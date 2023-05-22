@@ -2,9 +2,12 @@ import React from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import "./Profile.css";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 import Avatar from "@mui/material/Avatar";
 
-export default function Profile({ user }) {
+export default function Profile() {
+  const { user } = useAuthContext();
+
   return (
     <Grid item xs={12} md={12} lg={12}>
       <Paper
@@ -17,9 +20,13 @@ export default function Profile({ user }) {
       >
         <h2 className="dashboard-title">Profile</h2>
         <div className="profile-content">
-          <Avatar alt={""} />
-          <label>Name:</label>
-          <label>Email:</label>
+          <Avatar alt={`${user.firstname}`} />
+          <label>
+            Name: <span>{user.firstname + " " + user.lastname}</span>
+          </label>
+          <label>
+            Email: <span>{user.email}</span>
+          </label>
         </div>
       </Paper>
     </Grid>
