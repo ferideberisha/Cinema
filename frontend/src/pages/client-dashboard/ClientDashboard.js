@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -9,20 +9,14 @@ import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import MenuIcon from "@mui/icons-material/Menu";
+import ClientRoutes from "./routes/ClientRoutes";
+import MyTickets from "./views/MyTickets/myTickets";
+import FavoriteMovies from "./views/FavoriteMovies/favoriteMovies";
+import WatchList from "./views/WatchList/watchList";
+import Profile from "./views/Profile/profile";
 import { useNavigate } from "react-router-dom";
-import StaffRoutes from "./routes/staff.route";
-import { useAuthContext } from "../../hooks/useAuthContext";
 
-// Import the necessary views/components for the movie ticket booking app admin dashboard
-import Profile from "./views/Profile/Profile";
-import AddMovie from "./views/Admin/AddMovie/AddMovie";
-import AddTheater from "./views/Admin/AddTheater/AddTheater";
-import AddShow from "./views/Admin/AddShow/AddShow";
-import UserList from "./views/Admin/UserList/UserList";
-import ShowList from "./views/Admin/ShowList/ShowList";
-import Messages from "./views/Admin/Messages/Messages";
-
-const drawerWidth = 220;
+const drawerWidth = 240;
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -58,14 +52,12 @@ function DashboardContent(props) {
     setOpen(!open);
   };
 
-  const { user } = useAuthContext();
-
   const navigate = useNavigate();
-  const [option, setOption] = React.useState(props.option);
 
+  const [option, setOption] = React.useState(props.option);
   const handleRouteChange = (view) => {
     setOption(view);
-    navigate("/staff/dashboard" + view);
+    navigate("/user/dashboard" + view); // Navigate to the specified view
   };
 
   return (
@@ -86,7 +78,7 @@ function DashboardContent(props) {
             </IconButton>
           </Toolbar>
           <Divider />
-          <StaffRoutes handleRouteChange={handleRouteChange} />
+          <ClientRoutes handleRouteChange={handleRouteChange} />
         </Drawer>
 
         <Box
@@ -101,15 +93,13 @@ function DashboardContent(props) {
             overflow: "auto",
           }}
         >
-          <Container maxWidth="xl" sx={{ mx: 0, mt: 2, mb: 0 }}>
+          <Toolbar />
+          <Container maxWidth="lg" sx={{ mx: 0, mt: 0, mb: 0 }}>
             <Grid container spacing={3}>
               {option === "" && <Profile />}
-              {user.isAdmin && option === "/add-movie" && <AddMovie />}
-              {user.isAdmin && option === "/add-theater" && <AddTheater />}
-              {user.isAdmin && option === "/add-show" && <AddShow />}
-              {user.isAdmin && option === "/view-users" && <UserList />}
-              {user.isAdmin && option === "/show-list" && <ShowList />}
-              {user.isAdmin && option === "/messages" && <Messages />}
+              {option === "/my-tickets" && <MyTickets />}
+              {option === "/favorite-movies" && <FavoriteMovies />}
+              {option === "/watch-list" && <WatchList />}
             </Grid>
           </Container>
         </Box>
@@ -118,6 +108,6 @@ function DashboardContent(props) {
   );
 }
 
-export default function StaffDashboard(props) {
+export default function MovieTicketDashboard(props) {
   return <DashboardContent option={props.option} />;
 }

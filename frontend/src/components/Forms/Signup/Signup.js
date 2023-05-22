@@ -9,11 +9,11 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import api from "../../../api/axios";
 import { useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import MuiAlert from "@mui/material/Alert";
-import { RegisterUser } from "../../../api/users";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { ShowLoading, HideLoading } from "../../../redux/loadersSlice";
@@ -46,48 +46,57 @@ export default function Signup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [alert, setAlert] = useState(null);
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [formData, setFormData] = useState({
-    firstname: "",
-    lastname: "",
-    email: "",
-    password: "",
-  });
+  const formData = {
+    firstname,
+    lastname,
+    email,
+    password,
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(formData);
 
     try {
       dispatch(ShowLoading());
-      const response = await RegisterUser(formData);
+      console.log(formData);
+      const response = await api.post("/api/users/register", formData);
+      console.log(response);
+
       dispatch(HideLoading());
-      if (response.success) {
-        setAlert({ message: "User created successfully", severity: "success" });
-        // navigate("/login");
-      } else if (formData.email.length > 0) {
-        setAlert({ message: "Email already in use", severity: "error" });
+
+      if (response.data.token) {
+        setAlert({
+          message: "User created successfully",
+          severity: "success",
+        });
+      } else if (
+        response.data.msg &&
+        response.data.msg.includes("Email already in use")
+      ) {
+        setAlert({
+          message: "Email already in use",
+          severity: "error",
+        });
       } else {
-        setAlert({ message: "User not created", severity: "error" });
+        setAlert({
+          message: "User not created",
+          severity: "error",
+        });
       }
     } catch (error) {
       dispatch(HideLoading());
-      setAlert({ message: "Error", severity: "error" });
+      setAlert({
+        message: "Error",
+        severity: "error",
+      });
     }
   };
-
-  const handleInputChange = (event) => {
-    const { name, value, checked } = event.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: name === "agreeToTerms" ? checked : value,
-    }));
-  };
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      // navigate("/");
-    }
-  }, [navigate]);
 
   const handleAlertClose = () => {
     setAlert(null);
@@ -139,39 +148,39 @@ export default function Signup() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  autoComplete="given-name"
-                  name="firstname"
                   required
                   fullWidth
                   id="firstname"
                   label="First Name"
-                  autoFocus
-                  value={formData.firstname}
-                  onChange={handleInputChange}
+                  name="firstname"
+                  autoComplete="firstname"
+                  onChange={(e) => setFirstname(e.target.value)}
+                  value={firstname}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  autoComplete="family-name"
-                  name="lastname"
                   required
                   fullWidth
-                  id="lastName"
+                  id="lastname"
                   label="Last Name"
-                  value={formData.lastname}
-                  onChange={handleInputChange}
+                  name="lastname"
+                  autoComplete="lastname"
+                  value={lastname}
+                  onChange={(e) => setLastname(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  autoComplete="email"
-                  name="email"
                   required
                   fullWidth
+                  type="email"
                   id="email"
                   label="Email Address"
-                  value={formData.email}
-                  onChange={handleInputChange}
+                  name="email"
+                  autoComplete="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -183,8 +192,8 @@ export default function Signup() {
                   type="password"
                   id="password"
                   label="Password"
-                  value={formData.password}
-                  onChange={handleInputChange}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </Grid>
             </Grid>
