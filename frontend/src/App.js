@@ -1,28 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Route,
-  Routes,
   Navigate,
+  Routes,
 } from "react-router-dom";
-import "./App.css";
+import { ThemeProvider } from "styled-components";
+import { useAuthContext } from "./hooks/useAuthContext";
+import "swiper/swiper.min.css";
+import "./App.scss";
+
 import Navbar from "./components/Navbar/Navbar";
-import HomePage from "./home/HomePage";
-import SinglePage from "./components/watch/SinglePage";
+import Footer from "./components/footer/Footer";
 import Login from "./pages/Login/login";
 import Register from "./pages/Register/register";
 import Movies from "./pages/Movies/movies";
 import Theaters from "./pages/Theaters/theaters";
 import Events from "./pages/Events/events";
-import Footer from "./components/footer/Footer";
 import Admin from "./pages/Admin/index";
 import ClientDashboard from "./pages/client-dashboard/ClientDashboard";
 import StaffDashboard from "./pages/staff-dashboard/StaffDashboard";
-import { ThemeProvider } from "styled-components";
-import { useAuthContext } from "./hooks/useAuthContext";
+import Home from "./pages/Home";
+import Detail from "./pages/detail/Detail";
 
 function App() {
-  const { user, authIsReady } = useAuthContext();
+  const { user } = useAuthContext();
 
   const theme = {
     colors: {
@@ -43,8 +45,7 @@ function App() {
         <Router>
           <Navbar />
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/singlepage/:id" element={<SinglePage />} />
+            <Route path="/" element={<Home />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/theaters" element={<Theaters />} />
             <Route path="/events" element={<Events />} />
@@ -74,7 +75,6 @@ function App() {
                 }
               />
             </Route>
-
             {/* Staff Dashboard */}
             <Route path="/staff">
               <Route
@@ -91,74 +91,7 @@ function App() {
               />
             </Route>
 
-            <Route path="/staff">
-              <Route
-                path="/staff/dashboard/add-movie"
-                element={
-                  !user ? (
-                    <Navigate to="/login" />
-                  ) : !user.isStaff ? (
-                    <Navigate to="/patient/dashboard" />
-                  ) : (
-                    <StaffDashboard option={"/add-movie"} />
-                  )
-                }
-              />
-            </Route>
-            <Route path="/staff">
-              <Route
-                path="/staff/dashboard/add-show"
-                element={
-                  !user ? (
-                    <Navigate to="/login" />
-                  ) : !user.isStaff ? (
-                    <Navigate to="/user/dashboard" />
-                  ) : (
-                    <StaffDashboard option={"/add-show"} />
-                  )
-                }
-              />
-            </Route>
-            <Route path="/staff">
-              <Route
-                path="/staff/dashboard/view-users"
-                element={
-                  !user ? (
-                    <Navigate to="/login" />
-                  ) : !user.isStaff ? (
-                    <Navigate to="/user/dashboard" />
-                  ) : (
-                    <StaffDashboard option={"/view-users"} />
-                  )
-                }
-              />
-            </Route>
-            <Route path="/staff">
-              <Route
-                path="/staff/dashboard/manage-theaters"
-                element={
-                  !user ? (
-                    <Navigate to="/login" />
-                  ) : !user.isStaff ? (
-                    <Navigate to="/user/dashboard" />
-                  ) : (
-                    <StaffDashboard option={"/manage-theaters"} />
-                  )
-                }
-              />
-            </Route>
-            <Route
-              path="/staff/dashboard/messages"
-              element={
-                !user ? (
-                  <Navigate to="/login" />
-                ) : !user.isStaff ? (
-                  <Navigate to="/user/dashboard" />
-                ) : (
-                  <StaffDashboard option={"/messages"} />
-                )
-              }
-            />
+            <Route path="/:category/:id" element={<Detail />} />
           </Routes>
           <Footer />
         </Router>
