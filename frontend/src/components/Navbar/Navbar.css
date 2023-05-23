@@ -1,8 +1,13 @@
 header {
     height: 90px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    background-color: #99ddff;
-}
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+  }
 
 header .container {
     height: 100%;
