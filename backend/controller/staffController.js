@@ -88,7 +88,9 @@ const staff_login = (req, res) => {
   });
 };
 const staff_list = (req, res) => {
-  Staff.find().then((staff) => res.json(staff));
+  Staff.find()
+    .select("-password")
+    .then((staff) => res.json(staff));
 };
 
 const staff_get = async (req, res) => {

@@ -1,11 +1,10 @@
-import React from 'react'
+// import React from 'react'
 
-function TheaterList(){
-return(
-    <div>TheaterList</div>
-)
+// function TheaterList(){
+// return(
+//     <div>TheaterList</div>
+// )
 
+// }
 
-}
-
-export default TheaterList
+// export default TheaterList

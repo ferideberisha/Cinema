@@ -18,6 +18,8 @@ import Profile from "./views/Profile/Profile";
 import AddMovie from "./views/Admin/AddMovie/AddMovie";
 import AddTheater from "./views/Admin/AddTheater/AddTheater";
 import AddShow from "./views/Admin/AddShow/AddShow";
+import AddStaff from "./views/Admin/AddStaff/AddStaff";
+import StaffList from "./views/Admin/StaffList/StaffList";
 import UserList from "./views/Admin/UserList/UserList";
 import ShowList from "./views/Admin/ShowList/ShowList";
 import Messages from "./views/Admin/Messages/Messages";
@@ -107,6 +109,8 @@ function DashboardContent(props) {
               {user.isAdmin && option === "/add-movie" && <AddMovie />}
               {user.isAdmin && option === "/add-theater" && <AddTheater />}
               {user.isAdmin && option === "/add-show" && <AddShow />}
+              {user.isAdmin && option === "/add-staff" && <AddStaff />}
+              {user.isAdmin && option === "/view-staff" && <StaffList />}
               {user.isAdmin && option === "/view-users" && <UserList />}
               {user.isAdmin && option === "/show-list" && <ShowList />}
               {user.isAdmin && option === "/messages" && <Messages />}
