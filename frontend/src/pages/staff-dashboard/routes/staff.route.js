@@ -4,6 +4,8 @@ import ListItemText from "@mui/material/ListItemText";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import PermContactCalendar from "@mui/icons-material/PermContactCalendar";
 import { Badge } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { useAuthContext } from "../../../hooks/useAuthContext";
@@ -57,6 +59,24 @@ export default function MenuItems({ handleRouteChange }) {
             <AddCircleIcon />
           </ListItemIcon>
           <ListItemText primary="Add Show" />
+        </ListItem>
+      )}
+
+      {user.isAdmin && (
+        <ListItem button onClick={() => handleRouteChange("/add-staff")}>
+          <ListItemIcon>
+            <PersonAdd />
+          </ListItemIcon>
+          <ListItemText primary="Add Staff" />
+        </ListItem>
+      )}
+
+      {user.isAdmin && (
+        <ListItem button onClick={() => handleRouteChange("/view-staff")}>
+          <ListItemIcon>
+            <PermContactCalendar />
+          </ListItemIcon>
+          <ListItemText primary="View Staff" />
         </ListItem>
       )}
 

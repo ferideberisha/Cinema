@@ -4,7 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv").config();
 const usersRoute = require("./routes/users/usersRoute");
 const staffRoute = require("./routes/staff/staffRoute");
-const moviesRoute =require("./routes/moviesRoute");
+const moviesRoute = require("./routes/moviesRoute");
 
 const app = express();
 
