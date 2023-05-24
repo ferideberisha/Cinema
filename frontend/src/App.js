@@ -17,12 +17,10 @@ import Register from "./pages/Register/register";
 import Movies from "./pages/Movies/movies";
 import Theaters from "./pages/Theaters/theaters";
 import Events from "./pages/Events/events";
-import Admin from "./pages/Admin/index";
 import ClientDashboard from "./pages/client-dashboard/ClientDashboard";
 import StaffDashboard from "./pages/staff-dashboard/StaffDashboard";
 import Home from "./pages/Home";
 import Detail from "./pages/detail/Detail";
-
 function App() {
   const { user } = useAuthContext();
 
@@ -44,14 +42,14 @@ function App() {
       <ThemeProvider theme={theme}>
         <Router>
           <Navbar />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/movies" element={<Movies />} />
-              <Route path="/theaters" element={<Theaters />} />
-              <Route path="/events" element={<Events />} />
-              {/* <Route path="/admin" element={<Admin />} /> */}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/movies" element={<Movies />} />
+            <Route path="/theaters" element={<Theaters />} />
+            <Route path="/events" element={<Events />} />
+            {/* <Route path="/admin" element={<Admin />} /> */}
 
-              <Route
+            <Route
               path="/login"
               element={!user ? <Login /> : <Navigate to="/" />}
             />
@@ -76,7 +74,7 @@ function App() {
               />
             </Route>
 
-              {/* Staff Dashboard */}
+            {/* Staff Dashboard */}
             <Route path="/staff">
               <Route
                 path="/staff/dashboard"
@@ -99,9 +97,23 @@ function App() {
                   !user ? (
                     <Navigate to="/login" />
                   ) : !user.isStaff ? (
-                    <Navigate to="/patient/dashboard" />
+                    <Navigate to="/user/dashboard" />
                   ) : (
                     <StaffDashboard option={"/add-movie"} />
+                  )
+                }
+              />
+            </Route>
+            <Route path="/staff">
+              <Route
+                path="/staff/dashboard/add-theater"
+                element={
+                  !user ? (
+                    <Navigate to="/login" />
+                  ) : !user.isStaff ? (
+                    <Navigate to="/user/dashboard" />
+                  ) : (
+                    <StaffDashboard option={"/add-theater"} />
                   )
                 }
               />
@@ -136,14 +148,14 @@ function App() {
             </Route>
             <Route path="/staff">
               <Route
-                path="/staff/dashboard/manage-theaters"
+                path="/staff/dashboard/view-theaters"
                 element={
                   !user ? (
                     <Navigate to="/login" />
                   ) : !user.isStaff ? (
                     <Navigate to="/user/dashboard" />
                   ) : (
-                    <StaffDashboard option={"/manage-theaters"} />
+                    <StaffDashboard option={"/view-theaters"} />
                   )
                 }
               />
