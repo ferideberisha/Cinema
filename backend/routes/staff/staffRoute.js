@@ -23,6 +23,13 @@ router.get("/movie/:id", staffController.movie_get);
 router.delete("/movie/:id", staffController.movie_delete);
 router.put("/movie/:id", staffController.movie_update);
 
+// theater routes
+router.post("/theater", staffController.theater_post);
+router.put("/theater/:id", staffController.theater_update);
+router.delete("/theater/:id", staffController.theater_delete);
+router.get("/theater/all", staffController.theater_list);
+router.get("/theater/:id", staffController.theater_get);
+
 // use routes
 router.use("/contactus", require("./contactus/contactusRoute.js"));
 

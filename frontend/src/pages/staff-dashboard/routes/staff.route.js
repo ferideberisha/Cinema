@@ -63,6 +63,15 @@ export default function MenuItems({ handleRouteChange }) {
       )}
 
       {user.isAdmin && (
+        <ListItem button onClick={() => handleRouteChange("/add-theater")}>
+          <ListItemIcon>
+            <AddCircleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Add Theater" />
+        </ListItem>
+      )}
+
+      {user.isAdmin && (
         <ListItem button onClick={() => handleRouteChange("/add-staff")}>
           <ListItemIcon>
             <PersonAdd />
@@ -90,11 +99,11 @@ export default function MenuItems({ handleRouteChange }) {
       )}
 
       {user.isAdmin && (
-        <ListItem button onClick={() => handleRouteChange("/manage-theaters")}>
+        <ListItem button onClick={() => handleRouteChange("/view-theaters")}>
           <ListItemIcon>
             <LibraryBooksIcon />
           </ListItemIcon>
-          <ListItemText primary="Manage Theaters" />
+          <ListItemText primary="View Theaters" />
         </ListItem>
       )}
       {user.isAdmin && (
