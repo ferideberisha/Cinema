@@ -86,7 +86,7 @@ export default function Messages() {
         display: "flex",
         flexDirection: "column",
         height: "auto",
-        minWidth: "1176px",
+        minWidth: "1129px",
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>

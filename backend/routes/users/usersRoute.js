@@ -1,29 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../../models/staffModel");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const authMiddleware = require("../../middleware/authMiddleware");
 const userController = require("../../controller/userController");
 
 router.post("/register", userController.user_register);
 router.post("/login", userController.user_login);
+router.get("/all", userController.user_list);
+router.get("/:id", userController.user_get);
 
-// get user details by id
-router.get("/get-current-user", authMiddleware, async (req, res) => {
-  try {
-    const user = await User.findById(req.body.userId).select("-password");
-    res.send({
-      success: true,
-      message: "User details fetched successfully",
-      data: user,
-    });
-  } catch (error) {
-    res.send({
-      success: false,
-      message: error.message,
-    });
-  }
-});
+router.delete("/:id", userController.user_delete);
+
+router.put("/:id", userController.user_update);
 
 module.exports = router;

@@ -105,7 +105,7 @@ export default function Auth() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 5,
+            marginTop: "8rem",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
