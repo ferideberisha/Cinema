@@ -5,49 +5,62 @@ import Paper from "@mui/material/Paper";
 import { useState } from "react";
 import { Box } from "@mui/system";
 import api from "../../../../../api/axios";
-import { useAuthContext } from "../../../../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useQueryClient } from "react-query";
+import { useForm, Controller, trigger } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 export default function AddStaff() {
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const validationSchema = Yup.object().shape({
+    firstname: Yup.string()
+      .required("Firstname is required")
+      .min(3, "Firstname must be at least 3 characters")
+      .max(50, "Firstname must not exceed 50 characters"),
+    lastname: Yup.string()
+      .required("Lastname is required")
+      .min(3, "Lastname must be at least 3 characters")
+      .max(50, "Lastname must not exceed 50 characters"),
+    email: Yup.string().required("Email is required").email("Invalid Email."),
+    password: Yup.string()
+      .required("Password is required")
+      .min(8, "Password must be at least 8 characters")
+      .max(260, "Password must not exceed 260 characters"),
+    isAdmin: Yup.string().required("Admin is a required field"),
+  });
+
   const [isAdmin, setIsAdmin] = useState(false);
-  const { user } = useAuthContext();
 
   const navigate = useNavigate();
 
-  const queryClient = useQueryClient();
-
-  const handleAdminChange = (event) => {
-    const newAdmin = event.target.value === "true";
-    setIsAdmin(newAdmin);
+  const handleAdminChange = async (event) => {
+    setIsAdmin(event.target.value);
+    await trigger(["admin"]);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const data = { firstname, lastname, email, password, isAdmin, id: user.id };
+  const onSubmit = (data) => {
     try {
-      await api.post("/api/staff/register", data).then((userData) => {
-        setFirstname("");
-        setLastname("");
-        setEmail("");
-        setPassword("");
-        setIsAdmin(false);
-        console.log(userData);
-
-        queryClient.invalidateQueries("staff");
+      api.post("/api/staff/register", data).then((userData) => {
+        reset();
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
     }
   };
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    trigger,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
 
   return (
     <Grid item xs={12} md={12} lg={12}>
@@ -71,48 +84,42 @@ export default function AddStaff() {
           <div>
             <TextField
               label="Firstname"
-              id="firstname"
               fullWidth
               multiline
               maxRows={5}
-              helperText={firstname?.message}
+              helperText={errors.firstname?.message}
               required
               InputLabelProps={{
                 shrink: true,
               }}
-              error={firstname ? true : false}
-              value={firstname}
-              onChange={(e) => setFirstname(e.target.value)}
+              {...register("firstname")}
+              error={errors.firstname ? true : false}
             />
             <TextField
               label="Lastname"
-              id="lastname"
               fullWidth
               multiline
               maxRows={5}
-              helperText={lastname?.message}
+              helperText={errors.lastname?.message}
               required
               InputLabelProps={{
                 shrink: true,
               }}
-              error={lastname ? true : false}
-              value={lastname}
-              onChange={(e) => setLastname(e.target.value)}
+              {...register("lastname")}
+              error={errors.lastname ? true : false}
             />
             <TextField
               label="Email"
-              id="email"
               fullWidth
               multiline
               maxRows={5}
-              helperText={email?.message}
+              helperText={errors.email?.message}
               required
               InputLabelProps={{
                 shrink: true,
               }}
-              error={email ? true : false}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register("email")}
+              error={errors.email ? true : false}
             />
             <TextField
               required
@@ -122,24 +129,25 @@ export default function AddStaff() {
               type="password"
               id="password"
               autoComplete="new-password"
-              helperText={password?.message}
+              helperText={errors.password?.message}
               InputLabelProps={{
                 shrink: true,
               }}
-              error={password ? true : false}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register("password")}
+              error={errors.password ? true : false}
             />
 
             <FormControl sx={{ m: 1, minWidth: 140 }}>
-              <InputLabel id="admin-label">Is Admin?</InputLabel>
+              <InputLabel id="gender">Is Admin?</InputLabel>
               <Select
-                labelId="admin-label"
+                labelId="admin"
                 id="admin"
                 label="Is Admin?"
+                control={control}
                 required
                 defaultValue={"false"}
                 onChange={handleAdminChange}
+                {...register("isAdmin")}
               >
                 <MenuItem value={"true"}>Yes</MenuItem>
                 <MenuItem value={"false"}>No</MenuItem>
@@ -147,7 +155,7 @@ export default function AddStaff() {
             </FormControl>
           </div>
           <Button
-            onClick={handleSubmit}
+            onClick={handleSubmit(onSubmit)}
             variant="contained"
             sx={{ mt: 5, mb: 5 }}
           >

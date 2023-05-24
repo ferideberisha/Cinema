@@ -23,6 +23,7 @@ import StaffList from "./views/Admin/StaffList/StaffList";
 import UserList from "./views/Admin/UserList/UserList";
 import ShowList from "./views/Admin/ShowList/ShowList";
 import Messages from "./views/Admin/Messages/Messages";
+import TheaterList from "./views/Admin/TheaterList/TheaterList";
 
 const drawerWidth = 220;
 
@@ -72,7 +73,7 @@ function DashboardContent(props) {
 
   return (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", marginTop: "5.5rem" }}>
         <CssBaseline />
         <Drawer variant="permanent" open={open}>
           <Toolbar
@@ -107,10 +108,11 @@ function DashboardContent(props) {
             <Grid container spacing={3}>
               {option === "" && <Profile />}
               {user.isAdmin && option === "/add-movie" && <AddMovie />}
-              {user.isAdmin && option === "/add-theater" && <AddTheater />}
               {user.isAdmin && option === "/add-show" && <AddShow />}
               {user.isAdmin && option === "/add-staff" && <AddStaff />}
               {user.isAdmin && option === "/view-staff" && <StaffList />}
+              {user.isAdmin && option === "/add-theater" && <AddTheater />}
+              {user.isAdmin && option === "/view-theaters" && <TheaterList />}
               {user.isAdmin && option === "/view-users" && <UserList />}
               {user.isAdmin && option === "/show-list" && <ShowList />}
               {user.isAdmin && option === "/messages" && <Messages />}

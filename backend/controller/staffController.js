@@ -1,5 +1,6 @@
 const Staff = require("../models/staffModel");
 const Movie = require("../models/movieModel");
+const Theater = require("../models/theatersModel");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -202,6 +203,68 @@ const movie_update = async (req, res, next) => {
     });
 };
 
+const theater_post = (req, res, next) => {
+  const theater = new Theater({
+    theaterName: req.body.theaterName,
+    description: req.body.description,
+    creator: req.body.creator,
+  });
+  theater
+    .save(theater)
+    .then(() => {
+      res.status(200).json({
+        theater,
+        message: "theater created",
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
+};
+
+const theater_list = (req, res) => {
+  Theater.find()
+    .populate({ path: "creator", select: "firstname" })
+    .then((theater) => res.json(theater));
+};
+
+const theater_get = async (req, res) => {
+  await Theater.findById(req.params.id)
+    .populate({ path: "creator", select: "firstname" })
+    .then((theater) => res.json(theater));
+};
+
+const theater_delete = async (req, res) => {
+  await Theater.deleteOne({ _id: req.params.id }).then(() => {
+    res.status(200).json({
+      message: "theater deleted",
+    });
+  });
+};
+
+const theater_update = async (req, res, next) => {
+  const theater = new Theater({
+    _id: req.params.id,
+    theaterName: req.body.theaterName,
+    description: req.body.description,
+    creator: req.body.creator,
+  });
+  await Theater.updateOne({ _id: req.params.id }, theater)
+    .then(() => {
+      res.status(200).json({
+        theater,
+        message: "theater updated",
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
+};
+
 module.exports = {
   staff_register,
   staff_login,
@@ -214,4 +277,9 @@ module.exports = {
   movie_delete,
   movie_post,
   movie_update,
+  theater_delete,
+  theater_get,
+  theater_list,
+  theater_post,
+  theater_update,
 };

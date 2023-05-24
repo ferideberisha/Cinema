@@ -3,21 +3,24 @@ const Movie = require("../models/movieModel");
 const authMiddleware = require("../middleware/authMiddleware");
 
 // Add a new movie
-router.post("/add-movie", /*authMiddleware,*/ async (req, res) => {
-  try {
-    const newMovie = new Movie(req.body);
-    await newMovie.save();
-    res.send({
-      success: true,
-      message: "Movie added successfully",
-    });
-  } catch (error) {
-    res.send({
-      success: false,
-      message: error.message,
-    });
+router.post(
+  "/add-movie",
+  /*authMiddleware,*/ async (req, res) => {
+    try {
+      const newMovie = new Movie(req.body);
+      await newMovie.save();
+      res.send({
+        success: true,
+        message: "Movie added successfully",
+      });
+    } catch (error) {
+      res.send({
+        success: false,
+        message: error.message,
+      });
+    }
   }
-});
+);
 
 // get all movies
 router.get("/get-all-movies", async (req, res) => {
@@ -36,7 +39,6 @@ router.get("/get-all-movies", async (req, res) => {
   }
 });
 
-
 // update a movie
 router.post("/update-movie", authMiddleware, async (req, res) => {
   try {
@@ -53,20 +55,23 @@ router.post("/update-movie", authMiddleware, async (req, res) => {
   }
 });
 // delete a movie
-router.post("/delete-movie", /*authMiddleware,*/ async (req, res) => {
-  try {
-    await Movie.findByIdAndDelete(req.body.movieId);
-    res.send({
-      success: true,
-      message: "Movie deleted successfully",
-    });
-  } catch (error) {
-    res.send({
-      success: false,
-      message: error.message,
-    });
+router.post(
+  "/delete-movie",
+  /*authMiddleware,*/ async (req, res) => {
+    try {
+      await Movie.findByIdAndDelete(req.body.movieId);
+      res.send({
+        success: true,
+        message: "Movie deleted successfully",
+      });
+    } catch (error) {
+      res.send({
+        success: false,
+        message: error.message,
+      });
+    }
   }
-});
+);
 
 // get a movie by id
 router.get("/get-movie-by-id/:id", async (req, res) => {
