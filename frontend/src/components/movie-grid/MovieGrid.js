@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate, useParams } from "react-router";
 
-import './movie-grid.scss';
+import "./movie-grid.scss";
 
-import MovieCard from '../movie-card/MovieCard';
-import Button, { OutlineButton } from '../button/Button';
-import Input from '../input/Input';
+import MovieCard from "../movie-card/MovieCard";
+import Button, { OutlineButton } from "../button/Button";
+import Input from "../input/Input";
 
-import tmdbApi, { category, movieType, tvType } from '../../api/tmdbApi';
+import tmdbApi, { category, movieType } from "../../api/tmdbApi";
 
 const MovieGrid = (props) => {
   const [items, setItems] = useState([]);
@@ -23,13 +23,7 @@ const MovieGrid = (props) => {
       let response = null;
       if (keyword === undefined) {
         const params = {};
-        switch (props.category) {
-          case category.movie:
-            response = await tmdbApi.getMoviesList(movieType.upcoming, { params });
-            break;
-          default:
-            response = await tmdbApi.getTvList(tvType.popular, { params });
-        }
+        response = await tmdbApi.getMoviesList(movieType.upcoming, { params });
       } else {
         const params = {
           query: keyword,
@@ -48,13 +42,7 @@ const MovieGrid = (props) => {
       const params = {
         page: page + 1,
       };
-      switch (props.category) {
-        case category.movie:
-          response = await tmdbApi.getMoviesList(movieType.upcoming, { params });
-          break;
-        default:
-          response = await tmdbApi.getTvList(tvType.popular, { params });
-      }
+      response = await tmdbApi.getMoviesList(movieType.upcoming, { params });
     } else {
       const params = {
         page: page + 1,
@@ -69,7 +57,11 @@ const MovieGrid = (props) => {
   return (
     <>
       <div className="section mb-3">
-        <MovieSearch category={props.category} keyword={keyword} navigate={navigate} />
+        <MovieSearch
+          category={props.category}
+          keyword={keyword}
+          navigate={navigate}
+        />
       </div>
       <div className="movie-grid">
         {items.map((item, i) => (
@@ -89,7 +81,7 @@ const MovieGrid = (props) => {
 
 const MovieSearch = (props) => {
   const navigate = props.navigate;
-  const [keyword, setKeyword] = useState(props.keyword ? props.keyword : '');
+  const [keyword, setKeyword] = useState(props.keyword ? props.keyword : "");
 
   const goToSearch = useCallback(() => {
     if (keyword.trim().length > 0) {
@@ -104,9 +96,9 @@ const MovieSearch = (props) => {
         goToSearch();
       }
     };
-    document.addEventListener('keyup', enterEvent);
+    document.addEventListener("keyup", enterEvent);
     return () => {
-      document.removeEventListener('keyup', enterEvent);
+      document.removeEventListener("keyup", enterEvent);
     };
   }, [keyword, goToSearch]);
 

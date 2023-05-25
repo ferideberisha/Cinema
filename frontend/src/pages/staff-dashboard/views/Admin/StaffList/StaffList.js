@@ -39,34 +39,19 @@ import {
   GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
-const ODD_OPACITY = 0.2;
 
 const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
-  [`& .${gridClasses.row}.even`]: {
-    backgroundColor: theme.palette.grey[200],
+  [`& .${gridClasses.row}`]: {
+    backgroundColor: "black",
     "&:hover, &.Mui-hovered": {
-      backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
-      "@media (hover: none)": {
-        backgroundColor: "transparent",
-      },
+      backgroundColor: "#282828",
     },
     "&.Mui-selected": {
-      backgroundColor: alpha(
-        theme.palette.primary.main,
-        ODD_OPACITY + theme.palette.action.selectedOpacity
-      ),
+      backgroundColor: "black",
       "&:hover, &.Mui-hovered": {
-        backgroundColor: alpha(
-          theme.palette.primary.main,
-          ODD_OPACITY +
-            theme.palette.action.selectedOpacity +
-            theme.palette.action.hoverOpacity
-        ),
+        backgroundColor: "black",
         "@media (hover: none)": {
-          backgroundColor: alpha(
-            theme.palette.primary.main,
-            ODD_OPACITY + theme.palette.action.selectedOpacity
-          ),
+          backgroundColor: "black",
         },
       },
     },
@@ -102,24 +87,31 @@ export default function StaffList() {
         >
           <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-              <GridToolbarQuickFilter />
-              <GridToolbarColumnsButton />
-              <GridToolbarFilterButton />
-              <GridToolbarDensitySelector />
-              <GridToolbarExport />
-              <Button onClick={handleClickOpen} startIcon={<DeleteIcon />}>
+              <GridToolbarQuickFilter style={{ color: "#fff" }} />
+              <GridToolbarColumnsButton style={{ color: "#fff" }} />
+              <GridToolbarFilterButton style={{ color: "#fff" }} />
+              <GridToolbarDensitySelector style={{ color: "#fff" }} />
+              <GridToolbarExport style={{ color: "#fff" }} />
+              <Button
+                onClick={handleClickOpen}
+                startIcon={<DeleteIcon />}
+                style={{ color: "#fff" }}
+              >
                 Delete
               </Button>
-              <Button onClick={handleClickOpen2} startIcon={<EditIcon />}>
+              <Button
+                onClick={handleClickOpen2}
+                startIcon={<EditIcon />}
+                style={{ color: "#fff" }}
+              >
                 Edit
               </Button>
             </div>
-            <div>
+            <div style={{ backgroundColor: "#00274d" }}>
               <Link to={"/"} style={{ textDecoration: "none" }}>
                 <Button
                   type="button"
                   variant="contained"
-                  color="primary"
                   float="right"
                   onClick={newClicked}
                   startIcon={<AddIcon />}

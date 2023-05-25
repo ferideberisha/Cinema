@@ -11,7 +11,6 @@ import "swiper/swiper.min.css";
 import "./App.scss";
 
 import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/footer/Footer";
 import Login from "./pages/Login/login";
 import Register from "./pages/Register/register";
 import Movies from "./pages/Movies/movies";
@@ -21,6 +20,7 @@ import ClientDashboard from "./pages/client-dashboard/ClientDashboard";
 import StaffDashboard from "./pages/staff-dashboard/StaffDashboard";
 import Home from "./pages/Home";
 import Detail from "./pages/detail/Detail";
+import Catalog from "./pages/Catalog";
 function App() {
   const { user } = useAuthContext();
 
@@ -44,10 +44,12 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/movies" element={<Movies />} />
+            {/* <Route path="/movies" element={<Movies />} /> */}
             <Route path="/theaters" element={<Theaters />} />
             <Route path="/events" element={<Events />} />
-            {/* <Route path="/admin" element={<Admin />} /> */}
+            <Route path="/:category/search/:keyword" element={<Catalog />} />
+            <Route path="/:category/:id" element={<Detail />} />
+            <Route path="/:category" element={<Catalog />} />
 
             <Route
               path="/login"
@@ -59,121 +61,111 @@ function App() {
             />
 
             {/* User Dashboard */}
-            <Route path="/user">
-              <Route
-                path="/user/dashboard"
-                element={
-                  !user ? (
-                    <Navigate to="/login" />
-                  ) : user.isStaff ? (
-                    <Navigate to="/staff/dashboard" />
-                  ) : (
-                    <ClientDashboard option={""} />
-                  )
-                }
-              />
-            </Route>
+            <Route
+              path="/user/dashboard"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : user.isStaff ? (
+                  <Navigate to="/staff/dashboard" />
+                ) : (
+                  <ClientDashboard option={""} />
+                )
+              }
+            />
 
             {/* Staff Dashboard */}
-            <Route path="/staff">
-              <Route
-                path="/staff/dashboard"
-                element={
-                  !user ? (
-                    <Navigate to="/login" />
-                  ) : !user.isStaff ? (
-                    <Navigate to="/user/dashboard" />
-                  ) : (
-                    <StaffDashboard option={""} />
-                  )
-                }
-              />
-            </Route>
+            <Route
+              path="/staff/dashboard"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={""} />
+                )
+              }
+            />
 
-            <Route path="/staff">
-              <Route
-                path="/staff/dashboard/add-movie"
-                element={
-                  !user ? (
-                    <Navigate to="/login" />
-                  ) : !user.isStaff ? (
-                    <Navigate to="/user/dashboard" />
-                  ) : (
-                    <StaffDashboard option={"/add-movie"} />
-                  )
-                }
-              />
-            </Route>
-            <Route path="/staff">
-              <Route
-                path="/staff/dashboard/add-theater"
-                element={
-                  !user ? (
-                    <Navigate to="/login" />
-                  ) : !user.isStaff ? (
-                    <Navigate to="/user/dashboard" />
-                  ) : (
-                    <StaffDashboard option={"/add-theater"} />
-                  )
-                }
-              />
-            </Route>
-            <Route path="/staff">
-              <Route
-                path="/staff/dashboard/add-show"
-                element={
-                  !user ? (
-                    <Navigate to="/login" />
-                  ) : !user.isStaff ? (
-                    <Navigate to="/user/dashboard" />
-                  ) : (
-                    <StaffDashboard option={"/add-show"} />
-                  )
-                }
-              />
-            </Route>
-            <Route path="/staff">
-              <Route
-                path="/staff/dashboard/view-users"
-                element={
-                  !user ? (
-                    <Navigate to="/login" />
-                  ) : !user.isStaff ? (
-                    <Navigate to="/user/dashboard" />
-                  ) : (
-                    <StaffDashboard option={"/view-users"} />
-                  )
-                }
-              />
-            </Route>
-            <Route path="/staff">
-              <Route
-                path="/staff/dashboard/view-theaters"
-                element={
-                  !user ? (
-                    <Navigate to="/login" />
-                  ) : !user.isStaff ? (
-                    <Navigate to="/user/dashboard" />
-                  ) : (
-                    <StaffDashboard option={"/view-theaters"} />
-                  )
-                }
-              />
-            </Route>
-            <Route path="/staff">
-              <Route
-                path="/staff/dashboard/add-staff"
-                element={
-                  !user ? (
-                    <Navigate to="/login" />
-                  ) : !user.isStaff ? (
-                    <Navigate to="/user/dashboard" />
-                  ) : (
-                    <StaffDashboard option={"/add-staff"} />
-                  )
-                }
-              />
-            </Route>
+            <Route
+              path="/staff/dashboard/add-movie"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/add-movie"} />
+                )
+              }
+            />
+
+            <Route
+              path="/staff/dashboard/add-theater"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/add-theater"} />
+                )
+              }
+            />
+
+            <Route
+              path="/staff/dashboard/add-show"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/add-show"} />
+                )
+              }
+            />
+
+            <Route
+              path="/staff/dashboard/view-users"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/view-users"} />
+                )
+              }
+            />
+
+            <Route
+              path="/staff/dashboard/view-theaters"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/view-theaters"} />
+                )
+              }
+            />
+
+            <Route
+              path="/staff/dashboard/add-staff"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/add-staff"} />
+                )
+              }
+            />
+
             <Route
               path="/staff/dashboard/view-staff"
               element={
@@ -198,10 +190,7 @@ function App() {
                 )
               }
             />
-
-            <Route path="/:category/:id" element={<Detail />} />
           </Routes>
-          <Footer />
         </Router>
       </ThemeProvider>
     </div>

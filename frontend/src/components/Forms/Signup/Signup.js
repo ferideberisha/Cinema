@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -40,7 +40,34 @@ function Copyright(props) {
   );
 }
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    mode: "dark",
+    background: {
+      default: "#28282B",
+    },
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiInputBase-root": {
+            "& fieldset": {
+              borderColor: "#00366b", // Set the border color of the TextField
+            },
+            "&:hover fieldset": {
+              borderColor: "#00366b", // Set the border color on hover
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#00366b", // Set the border color when focused
+            },
+          },
+        },
+      },
+    },
+  },
+  shadows: ["none"], // Disable the box shadow on focused TextField
+});
 
 export default function Signup() {
   const dispatch = useDispatch();
@@ -133,7 +160,7 @@ export default function Signup() {
               {alert.message}
             </Alert>
           )}
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: "#00366b", color: "#fff" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -153,7 +180,7 @@ export default function Signup() {
                   id="firstname"
                   label="First Name"
                   name="firstname"
-                  autoComplete="firstname"
+                  autoComplete="off"
                   onChange={(e) => setFirstname(e.target.value)}
                   value={firstname}
                 />
@@ -165,7 +192,7 @@ export default function Signup() {
                   id="lastname"
                   label="Last Name"
                   name="lastname"
-                  autoComplete="lastname"
+                  autoComplete="off"
                   value={lastname}
                   onChange={(e) => setLastname(e.target.value)}
                 />
@@ -178,7 +205,7 @@ export default function Signup() {
                   id="email"
                   label="Email Address"
                   name="email"
-                  autoComplete="email"
+                  autoComplete="off"
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
                 />
@@ -202,7 +229,13 @@ export default function Signup() {
               fullWidth
               variant="contained"
               color="primary"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{
+                mt: 3,
+                mb: 2,
+                backgroundColor: "#00366b",
+                color: "#fff",
+                "&:hover": { backgroundColor: "#004a94" },
+              }}
             >
               Sign Up
             </Button>

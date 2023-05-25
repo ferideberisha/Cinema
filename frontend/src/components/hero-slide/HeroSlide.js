@@ -9,7 +9,6 @@ import Modal, { ModalContent } from "../modal/Modal";
 
 import tmdbApi, { category, movieType } from "../../api/tmdbApi";
 import apiConfig from "../../api/apiConfig";
-import ContactUsModal from "../../pages/Contactus/contactus";
 
 import "./hero-slide.scss";
 
@@ -115,19 +114,16 @@ const TrailerModal = (props) => {
   const onClose = () => iframeRef.current.setAttribute("src", "");
 
   return (
-    <>
-      <ContactUsModal />
-      <Modal active={false} id={`modal_${item.id}`}>
-        <ModalContent onClose={onClose}>
-          <iframe
-            ref={iframeRef}
-            width="100%"
-            height="500px"
-            title="trailer"
-          ></iframe>
-        </ModalContent>
-      </Modal>
-    </>
+    <Modal active={false} id={`modal_${item.id}`}>
+      <ModalContent onClose={onClose}>
+        <iframe
+          ref={iframeRef}
+          width="100%"
+          height="500px"
+          title="trailer"
+        ></iframe>
+      </ModalContent>
+    </Modal>
   );
 };
 

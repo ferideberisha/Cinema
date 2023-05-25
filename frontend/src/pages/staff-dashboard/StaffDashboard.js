@@ -53,7 +53,14 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
-const mdTheme = createTheme();
+const mdTheme = createTheme({
+  palette: {
+    mode: "dark",
+    background: {
+      default: "#28282B",
+    },
+  },
+});
 
 function DashboardContent(props) {
   const [open, setOpen] = React.useState(true);

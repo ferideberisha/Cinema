@@ -40,6 +40,35 @@ function Copyright(props) {
   );
 }
 
+const theme = createTheme({
+  palette: {
+    mode: "dark",
+    background: {
+      default: "#28282B",
+    },
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiInputBase-root": {
+            "& fieldset": {
+              borderColor: "#00366b", // Set the border color of the TextField
+            },
+            "&:hover fieldset": {
+              borderColor: "#00366b", // Set the border color on hover
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#00366b", // Set the border color when focused
+            },
+          },
+        },
+      },
+    },
+  },
+  shadows: ["none"], // Disable the box shadow on focused TextField
+});
+
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -87,7 +116,7 @@ export default function Auth() {
 
   const handleAlertClose = () => {
     setAlert(null);
-    navigate("/");
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -100,7 +129,7 @@ export default function Auth() {
   });
 
   return (
-    <ThemeProvider theme={createTheme()}>
+    <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -120,7 +149,7 @@ export default function Auth() {
               {alert.message}
             </Alert>
           )}
-          <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: "#00366b", color: "#fff" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
@@ -131,7 +160,7 @@ export default function Auth() {
               id="email"
               label="Email Address"
               name="email"
-              autoComplete="email"
+              autoComplete="off"
               autoFocus
               onChange={(e) => setEmail(e.target.value)}
               value={email}
@@ -145,7 +174,7 @@ export default function Auth() {
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
+              autoComplete="off"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
             />
@@ -153,7 +182,13 @@ export default function Auth() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{
+                mt: 3,
+                mb: 2,
+                backgroundColor: "#00366b",
+                color: "#fff",
+                "&:hover": { backgroundColor: "#004a94" },
+              }}
             >
               Log In
             </Button>

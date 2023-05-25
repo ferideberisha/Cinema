@@ -17,7 +17,6 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import Stack from "@mui/material/Stack";
 import api from "../../api/axios";
-// import { useAuthContext } from "../../hooks/useAuthContext";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
@@ -41,6 +40,7 @@ const fabStyle = {
   bottom: 20,
   left: "auto",
   position: "fixed",
+  backgroundColor: "#00366b",
 };
 
 export default function ContactUsModal() {
@@ -113,7 +113,7 @@ export default function ContactUsModal() {
             onSubmit={handleSubmit}
           >
             <div className="leftContact">
-              <h2>Contact</h2>
+              <h2 style={{ color: "#00366b" }}>Contact</h2>
               <TextField
                 required
                 fullWidth
@@ -152,7 +152,7 @@ export default function ContactUsModal() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ margin: 0 }}
+                sx={{ margin: 0, backgroundColor: "#00366b" }}
               >
                 SEND
               </Button>
