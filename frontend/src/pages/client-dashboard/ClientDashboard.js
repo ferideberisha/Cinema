@@ -16,7 +16,7 @@ import WatchList from "./views/WatchList/watchList";
 import Profile from "./views/Profile/profile";
 import { useNavigate } from "react-router-dom";
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -44,7 +44,14 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
-const mdTheme = createTheme();
+const mdTheme = createTheme({
+  palette: {
+    mode: "dark",
+    background: {
+      default: "#28282B",
+    },
+  },
+});
 
 function DashboardContent(props) {
   const [open, setOpen] = React.useState(true);
@@ -62,7 +69,7 @@ function DashboardContent(props) {
 
   return (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", marginTop: "5.5rem" }}>
         <CssBaseline />
         <Drawer variant="permanent" open={open}>
           <Toolbar
@@ -93,8 +100,7 @@ function DashboardContent(props) {
             overflow: "auto",
           }}
         >
-          <Toolbar />
-          <Container maxWidth="lg" sx={{ mx: 0, mt: 0, mb: 0 }}>
+          <Container maxWidth="lg" sx={{ mx: 0, mt: 2, mb: 0 }}>
             <Grid container spacing={3}>
               {option === "" && <Profile />}
               {option === "/my-tickets" && <MyTickets />}

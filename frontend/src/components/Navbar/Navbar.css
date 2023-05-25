@@ -17,29 +17,11 @@ header .container {
     justify-content: space-between;
 }
 
-header .logo img {
-    width: 3.2rem;
-    display: flex;
-    align-items: center;
-}
-
-header .logo a {
-    letter-spacing: 1.5rem;
-    font-size: 1.2rem;
-    color: #00458b;
-    display: flex;
-    align-items: center;
-}
-
 .nav-row {
     flex: 0 0 auto;
     max-width: 1030px;
     display: flex;
     align-items: center;
-}
-
-.nav-row img {
-    padding-right: 10px;
 }
 
 .nav-row a:first-child {
@@ -64,7 +46,7 @@ header .container a {
 .navbar a {
     padding: 1rem;
     margin-left: 1.5rem;
-    color: #00458b;
+    color: #fff;
     letter-spacing: 0.1rem;
     transition: 0.2s ease-in-out;
     -webkit-transition: 0.2s ease-in-out;
@@ -89,12 +71,12 @@ header .container a {
 
 .btn-link a {
     text-transform: uppercase;
-    background-color: #3066be;
+    background-color: #00366b;
     color: white;
 }
 
 .btn-link a:hover {
-    background-color: #40476d;
+    background-color: #004b96;
 }
 
 .navbar {

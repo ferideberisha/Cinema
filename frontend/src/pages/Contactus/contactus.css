@@ -21,7 +21,7 @@
 
 .leftContact h2 {
     text-align: center;
-    color: #3066BE;
+    color: #00366b;
     padding-bottom: 5%;
 }
 
@@ -32,7 +32,7 @@
 .rightContact {
     width: 50%;
     height: 100%;
-    background-color: #1976D2;
+    background-color: #00366b;
 }
 
 .rightContact h3 {
@@ -72,10 +72,10 @@
     line-height: 60px;
     border-radius: 50%;
     color: #fff;
-    background-color: rgb(27, 27, 27);
+    background-color: #004b96;
     cursor: pointer;
     transition: all .2s ease-in-out;
-    background-color: #1976D2;
+    background-color: #004b96;
 }
 
 .socialMediaList a:after {
@@ -110,3 +110,4 @@
     position: relative;
     top: 9%;
 }
+
