@@ -1,42 +1,167 @@
 @use "../../scss/" as *;
 
 .movie-card {
-    position: relative;
-    background-position: top;
-    background-repeat: no-repeat;
-    background-size: cover;
-    padding-top: 160%;
+  position: relative;
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-top: 160%;
+  border-radius: $border-radius;
+  margin-bottom: 1rem;
+
+  .btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: $black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
     border-radius: $border-radius;
-    margin-bottom: 1rem;
+  }
 
-    .btn {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover::before {
+      opacity: 0.8;
     }
 
-    &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        background-color: $black;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        border-radius: $border-radius;
+    &:hover .btn {
+      transform: translate(-50%, -50%) scale(1);
     }
+  }
 
-    @media (hover: hover) and (pointer: fine) {
-        &:hover::before {
-            opacity: 0.8;
-        }
+  .favorite-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 
-        &:hover .btn {
-            transform: translate(-50%, -50%) scale(1);
-        }
-    }
+  .dropdown-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 20;
+  }
+
+  .more-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.073);
+    z-index: 10;
+    cursor: pointer;
+    color: #fff;
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 30;
+    width: 200px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: none;
+
+  }
+
+  .dropdown-container .dropdown-menu {
+    display: block;
+  }
+
+  .dropdown-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .dropdown-menu li {
+    padding: 12px;
+    height: 40px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .dropdown-menu li:last-child {
+    border-bottom: none;
+    padding-bottom: 12px;
+  }
+
+  .dropdown-menu li:hover {
+    background-color: #00366b;
+  }
+
+  .dropdown-menu li:hover span {
+    color: #fff;
+  }
+
+  .dropdown-menu li i {
+    margin-right: 8px;
+  }
+
+  .dropdown-menu li span {
+    color: #374151;
+    font-size: 14px;
+  }
+
+  .watchlisted {
+    fill: #FF007F !important;
+  }
+
+  .rating-dropdown {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #FF007F;
+  }
+
+  .rating-dropdown span {
+    margin-left: 8px;
+  }
+
+  .rating-dropdown .rating-stars {
+    display: flex;
+    align-items: center;
+    
+  }
+
+  .rating-dropdown .rating-stars .star {
+    font-size: 24px;
+    margin-right: 4px;
+    cursor: pointer;
+    color: #FF007F;
+  }
+
+  .rating-dropdown .rating-stars .star:last-child {
+    margin-right: 0;
+  }
+  
 }
