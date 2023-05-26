@@ -79,71 +79,77 @@ const MovieCard = (props) => {
 
   return (
     <>
-      <div className="movie-card" style={{ backgroundImage: `url(${bg})` }}>
-        <div
-          className={`favorite-overlay ${isFavorite ? "active" : ""}`}
-          onClick={toggleFavorite}
-        >
-          {isFavorite ? (
-            <FavoriteIcon style={{ color: "#FF007F" }} />
-          ) : (
-            <FavoriteBorderOutlinedIcon style={{ color: "#FF007F" }} />
-          )}
-        </div>
-
-        <Link to={link}>
-          <Button>
-            <i className="bx bx-play"></i>
-            Book
-          </Button>
-        </Link>
-
-        <div className="dropdown-container">
-          <div className="more-icon" onClick={toggleDropdown}>
-            <MoreVertIcon style={{ color: "#FF007F" }} />
+      <div className="movie-card-container">
+        <div className="movie-card" style={{ backgroundImage: `url(${bg})` }}>
+          <div
+            className={`favorite-overlay ${isFavorite ? "active" : ""}`}
+            onClick={toggleFavorite}
+          >
+            {isFavorite ? (
+              <FavoriteIcon style={{ color: "#FF007F" }} />
+            ) : (
+              <FavoriteBorderOutlinedIcon style={{ color: "#FF007F" }} />
+            )}
           </div>
 
-          {showDropdown && (
-            <div className="dropdown-menu" onMouseLeave={handleClose}>
-              <ul>
-                <li onClick={toggleWatchlist}>
-                  {isWatchlisted ? (
-                    <BookmarkIcon style={{ color: "#FF007F" }} />
-                  ) : (
-                    <BookmarkBorderOutlinedIcon style={{ color: "#FF007F" }} />
-                  )}
-                  <span>Watchlist</span>
-                </li>
-                <li className="rating-item">
-                  <div
-                    className="rating-dropdown"
-                    aria-controls="rating-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                  >
-                    {rating > 0 ? (
-                      <StarIcon style={{ color: "#FF007F" }} />
-                    ) : (
-                      <StarBorderOutlinedIcon style={{ color: "#FF007F" }} />
-                    )}
-                    <span>Your Rating</span>
-                    <ArrowDropDownIcon style={{ color: "#FF007F" }} />
-                  </div>
-                  <Menu
-                    id="rating-menu"
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    <MenuItem>{renderRatingStars(5)}</MenuItem>
-                  </Menu>
-                </li>
-              </ul>
+          <Link to={link}>
+            <Button>
+              <i className="bx bx-play"></i>
+              Book
+            </Button>
+          </Link>
+
+          <div className="dropdown-container">
+            <div className="more-icon" onClick={toggleDropdown}>
+              <MoreVertIcon style={{ color: "#FF007F" }} />
             </div>
-          )}
+
+            {showDropdown && (
+              <div className="dropdown-menu" onMouseLeave={handleClose}>
+                <ul>
+                  <li onClick={toggleWatchlist}>
+                    {isWatchlisted ? (
+                      <BookmarkIcon style={{ color: "#FF007F" }} />
+                    ) : (
+                      <BookmarkBorderOutlinedIcon
+                        style={{ color: "#FF007F" }}
+                      />
+                    )}
+                    <span>Watchlist</span>
+                  </li>
+                  <li className="rating-item">
+                    <div
+                      className="rating-dropdown"
+                      aria-controls="rating-menu"
+                      aria-haspopup="true"
+                      onClick={handleClick}
+                    >
+                      {rating > 0 ? (
+                        <StarIcon style={{ color: "#FF007F" }} />
+                      ) : (
+                        <StarBorderOutlinedIcon style={{ color: "#FF007F" }} />
+                      )}
+                      <span>Your Rating</span>
+                      <ArrowDropDownIcon style={{ color: "#FF007F" }} />
+                    </div>
+                    <Menu
+                      id="rating-menu"
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}
+                    >
+                      <MenuItem>{renderRatingStars(5)}</MenuItem>
+                    </Menu>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="movie-title">
+          <h3>{item.title || item.name}</h3>
         </div>
       </div>
-      <h3>{item.title || item.name}</h3>
     </>
   );
 };

@@ -7,8 +7,9 @@ import apiConfig from "../../api/apiConfig";
 import "./detail.scss";
 import CastList from "./CastList";
 import VideoList from "./VideoList";
-
 import MovieList from "../../components/movie-list/MovieList";
+import CommentList from "./CommentList";
+import "./commentList.css";
 
 const Detail = () => {
   const { category, id } = useParams();
@@ -66,15 +67,15 @@ const Detail = () => {
               </div>
             </div>
           </div>
+          <div className="section mb-3">
+            <div className="section__header mb-2">
+              <h2 style={{ marginLeft: "10rem" }}>Comments</h2>
+            </div>
+            <CommentList itemId={item.id} />{" "}
+          </div>
           <div className="container">
             <div className="section mb-3">
               <VideoList id={item.id} />
-            </div>
-            <div className="section mb-3">
-              <div className="section__header mb-2">
-                <h2>Similar</h2>
-              </div>
-              <MovieList category={category} type="similar" id={item.id} />
             </div>
           </div>
         </>
