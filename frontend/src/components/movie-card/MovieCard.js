@@ -14,6 +14,8 @@ import StarIcon from "@mui/icons-material/Star";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const MovieCard = (props) => {
   const item = props.item;
@@ -27,21 +29,52 @@ const MovieCard = (props) => {
   const [rating, setRating] = useState(0);
   const [isWatchlisted, setIsWatchlisted] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [archivedAlert, setArchivedAlert] = useState(false);
+  const [removedFromFavoritesAlert, setRemovedFromFavoritesAlert] =
+    useState(false);
+  const [removedFromWatchListAlert, setRemovedFromWatchListAlert] =
+    useState(false);
+  const [ratingAlert, setRatingAlert] = useState(false);
 
   const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
+    if (!isFavorite) {
+      setIsFavorite(true);
+      setArchivedAlert(true);
+    } else {
+      setIsFavorite(false);
+      setRemovedFromFavoritesAlert(true);
+    }
   };
 
+  const toggleWatchlist = () => {
+    if (!isWatchlisted) {
+      setIsWatchlisted(true);
+      setArchivedAlert(true);
+    } else {
+      setIsWatchlisted(false);
+      setRemovedFromWatchListAlert(true);
+    }
+  };
+
+  const handleRemovedFromFavoritesAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setRemovedFromFavoritesAlert(false);
+  };
+
+  const handleRemovedFromWatchListAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setRemovedFromWatchListAlert(false);
+  };
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
 
   const handleRatingChange = (event) => {
     setRating(event.target.value);
-  };
-
-  const toggleWatchlist = () => {
-    setIsWatchlisted(!isWatchlisted);
   };
 
   const handleClick = (event) => {
@@ -59,7 +92,12 @@ const MovieCard = (props) => {
     } else {
       setRating(ratingValue);
     }
+    setRatingAlert(true); // Add this line to show the rating alert
     handleClose();
+  };
+
+  const handleRatingAlertClose = () => {
+    setRatingAlert(false);
   };
 
   const renderRatingStars = (numOfStars) => {
@@ -77,8 +115,22 @@ const MovieCard = (props) => {
     return stars;
   };
 
+  const handleArchivedAlertClose = () => {
+    setArchivedAlert(false);
+  };
+
+  const handleFavoriteClick = () => {
+    setIsFavorite(!isFavorite);
+    if (!isFavorite) {
+      setArchivedAlert(true);
+    } else {
+      setRemovedFromFavoritesAlert(true);
+    }
+  };
+
   return (
     <>
+<<<<<<< Updated upstream
       <div className="movie-card" style={{ backgroundImage: `url(${bg})` }}>
         <div
           className={`favorite-overlay ${isFavorite ? "active" : ""}`}
@@ -89,6 +141,74 @@ const MovieCard = (props) => {
           ) : (
             <FavoriteBorderOutlinedIcon style={{ color: "#FF007F" }} />
           )}
+=======
+      <div className="movie-card-container">
+        <div className="movie-card" style={{ backgroundImage: `url(${bg})` }}>
+          <div
+            className={`favorite-overlay ${isFavorite ? "active" : ""}`}
+            onClick={handleFavoriteClick}
+          >
+            {isFavorite ? (
+              <FavoriteIcon style={{ color: "#FF007F" }} />
+            ) : (
+              <FavoriteBorderOutlinedIcon style={{ color: "#FF007F" }} />
+            )}
+          </div>
+
+          <Link to={link}>
+            <Button>
+              <i className="bx bx-play"></i>
+              Book
+            </Button>
+          </Link>
+
+          <div className="dropdown-container">
+            <div className="more-icon" onClick={toggleDropdown}>
+              <MoreVertIcon style={{ color: "#FF007F" }} />
+            </div>
+
+            {showDropdown && (
+              <div className="dropdown-menu" onMouseLeave={handleClose}>
+                <ul>
+                  <li onClick={toggleWatchlist}>
+                    {isWatchlisted ? (
+                      <BookmarkIcon style={{ color: "#FF007F" }} />
+                    ) : (
+                      <BookmarkBorderOutlinedIcon
+                        style={{ color: "#FF007F" }}
+                      />
+                    )}
+                    <span>Watchlist</span>
+                  </li>
+                  <li className="rating-item">
+                    <div
+                      className="rating-dropdown"
+                      aria-controls="rating-menu"
+                      aria-haspopup="true"
+                      onClick={handleClick}
+                    >
+                      {rating > 0 ? (
+                        <StarIcon style={{ color: "#FF007F" }} />
+                      ) : (
+                        <StarBorderOutlinedIcon style={{ color: "#FF007F" }} />
+                      )}
+                      <span>Your Rating</span>
+                      <ArrowDropDownIcon style={{ color: "#FF007F" }} />
+                    </div>
+                    <Menu
+                      id="rating-menu"
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}
+                    >
+                      <MenuItem>{renderRatingStars(5)}</MenuItem>
+                    </Menu>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+>>>>>>> Stashed changes
         </div>
 
         <Link to={link}>
@@ -143,7 +263,74 @@ const MovieCard = (props) => {
           )}
         </div>
       </div>
+<<<<<<< Updated upstream
       <h3>{item.title || item.name}</h3>
+=======
+
+      <Snackbar
+        open={archivedAlert}
+        autoHideDuration={1000}
+        onClose={handleArchivedAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleArchivedAlertClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {isFavorite
+            ? `${item.title || item.name} added to your favorite list`
+            : isWatchlisted
+            ? `${item.title || item.name} added to your watch list`
+            : ""}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={removedFromFavoritesAlert}
+        autoHideDuration={1000}
+        onClose={handleRemovedFromFavoritesAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleRemovedFromFavoritesAlertClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {`${item.title || item.name} removed from your favorite list`}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={removedFromWatchListAlert}
+        autoHideDuration={1000}
+        onClose={handleRemovedFromWatchListAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleRemovedFromWatchListAlertClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {`${item.title || item.name} removed from your watch list`}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={ratingAlert}
+        autoHideDuration={2000}
+        onClose={handleRatingAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleRatingAlertClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {`Your rating (${rating} star${
+            rating !== 1 ? "s" : ""
+          }) has been saved`}
+        </Alert>
+      </Snackbar>
+>>>>>>> Stashed changes
     </>
   );
 };
