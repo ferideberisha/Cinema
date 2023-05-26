@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -26,6 +27,7 @@ import StaffDashboard from "./pages/staff-dashboard/StaffDashboard";
 import Home from "./pages/Home";
 import Detail from "./pages/detail/Detail";
 import Catalog from "./pages/Catalog";
+import Footer from "./components/Footer/Footer";
 function App() {
   const { user } = useAuthContext();
 
@@ -220,6 +222,7 @@ function App() {
               }
             />
           </Routes>
+          <Footer />
         </Router>
       </ThemeProvider>
     </div>
