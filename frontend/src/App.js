@@ -13,7 +13,6 @@ import "./App.scss";
 import Navbar from "./components/Navbar/Navbar";
 import Login from "./pages/Login/login";
 import Register from "./pages/Register/register";
-import Movies from "./pages/Movies/movies";
 import Theaters from "./pages/Theaters/theaters";
 import Theaters0 from "./pages/Theaters0/home";
 import Theaters1 from "./pages/Theaters1/theaters";
@@ -50,7 +49,6 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            {/* <Route path="/movies" element={<Movies />} /> */}
             <Route path="/theaters" element={<Theaters />} />
             <Route path="/theaters0" element={<Theaters0 />} />
             <Route path="/theaters1" element={<Theaters1 />} />
@@ -63,6 +61,7 @@ function App() {
             <Route path="/:category/:id" element={<Detail />} />
             <Route path="/:category" element={<Catalog />} />
 
+            {/* {Login/Register Routes} */}
             <Route
               path="/login"
               element={!user ? <Login /> : <Navigate to="/" />}
@@ -114,19 +113,6 @@ function App() {
             />
 
             <Route
-              path="/staff/dashboard/add-theater"
-              element={
-                !user ? (
-                  <Navigate to="/login" />
-                ) : !user.isStaff ? (
-                  <Navigate to="/user/dashboard" />
-                ) : (
-                  <StaffDashboard option={"/add-theater"} />
-                )
-              }
-            />
-
-            <Route
               path="/staff/dashboard/add-show"
               element={
                 !user ? (
@@ -135,6 +121,20 @@ function App() {
                   <Navigate to="/user/dashboard" />
                 ) : (
                   <StaffDashboard option={"/add-show"} />
+                )
+              }
+            />
+
+            {/* {Add/View User routes} */}
+            <Route
+              path="/staff/dashboard/add-user"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/add-user"} />
                 )
               }
             />
@@ -152,6 +152,20 @@ function App() {
               }
             />
 
+            {/* {Add/View Theater routes} */}
+            <Route
+              path="/staff/dashboard/add-theater"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/add-theater"} />
+                )
+              }
+            />
+
             <Route
               path="/staff/dashboard/view-theaters"
               element={
@@ -165,6 +179,7 @@ function App() {
               }
             />
 
+            {/* {Add/View Staff} */}
             <Route
               path="/staff/dashboard/add-staff"
               element={
@@ -190,6 +205,8 @@ function App() {
                 )
               }
             />
+
+            {/* {Messages route} */}
             <Route
               path="/staff/dashboard/messages"
               element={
