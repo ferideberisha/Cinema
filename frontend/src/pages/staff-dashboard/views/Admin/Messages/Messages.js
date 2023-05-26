@@ -112,7 +112,7 @@ export default function Messages() {
                 <AccordionSummary
                   sx={{
                     borderBottom: "1px solid #A9A9A9",
-                    backgroundColor: "#FDFDFD",
+                    backgroundColor: "#141414",
                     fontWeight: "fontWeightBold",
                   }}
                   expandIcon={<ExpandMoreIcon />}
@@ -124,13 +124,14 @@ export default function Messages() {
                       width: "33%",
                       flexShrink: 0,
                       fontWeight: record.read ? 100 : 700,
+                      color: "#fff",
                     }}
                   >
                     {record.name}
                   </Typography>
                   <Typography
                     sx={{
-                      color: "text.secondary",
+                      color: "#fff",
                       width: "33%",
                       fontWeight: record.read ? 100 : 700,
                     }}
@@ -139,7 +140,7 @@ export default function Messages() {
                   </Typography>
                   <Typography
                     sx={{
-                      color: "text.secondary",
+                      color: "#fff",
                       fontWeight: record.read ? 100 : 700,
                     }}
                   >

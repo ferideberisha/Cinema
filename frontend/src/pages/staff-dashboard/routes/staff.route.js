@@ -54,6 +54,15 @@ export default function MenuItems({ handleRouteChange }) {
       )}
 
       {user.isAdmin && (
+        <ListItem button onClick={() => handleRouteChange("/view-movie")}>
+          <ListItemIcon>
+            <LibraryBooksIcon />
+          </ListItemIcon>
+          <ListItemText primary="View Movies" />
+        </ListItem>
+      )}
+
+      {user.isAdmin && (
         <ListItem button onClick={() => handleRouteChange("/add-show")}>
           <ListItemIcon>
             <AddCircleIcon />
@@ -68,6 +77,15 @@ export default function MenuItems({ handleRouteChange }) {
             <AddCircleIcon />
           </ListItemIcon>
           <ListItemText primary="Add Theater" />
+        </ListItem>
+      )}
+
+      {user.isAdmin && (
+        <ListItem button onClick={() => handleRouteChange("/view-theaters")}>
+          <ListItemIcon>
+            <LibraryBooksIcon />
+          </ListItemIcon>
+          <ListItemText primary="View Theaters" />
         </ListItem>
       )}
 
@@ -90,6 +108,15 @@ export default function MenuItems({ handleRouteChange }) {
       )}
 
       {user.isAdmin && (
+        <ListItem button onClick={() => handleRouteChange("/add-user")}>
+          <ListItemIcon>
+            <PersonAdd />
+          </ListItemIcon>
+          <ListItemText primary="Add User" />
+        </ListItem>
+      )}
+
+      {user.isAdmin && (
         <ListItem button onClick={() => handleRouteChange("/view-users")}>
           <ListItemIcon>
             <LibraryBooksIcon />
@@ -98,14 +125,6 @@ export default function MenuItems({ handleRouteChange }) {
         </ListItem>
       )}
 
-      {user.isAdmin && (
-        <ListItem button onClick={() => handleRouteChange("/view-theaters")}>
-          <ListItemIcon>
-            <LibraryBooksIcon />
-          </ListItemIcon>
-          <ListItemText primary="View Theaters" />
-        </ListItem>
-      )}
       {user.isAdmin && (
         <ListItem button onClick={() => handleNumMsgChange()}>
           <ListItemIcon>
