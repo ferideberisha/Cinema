@@ -54,15 +54,6 @@ export default function MenuItems({ handleRouteChange }) {
       )}
 
       {user.isAdmin && (
-        <ListItem button onClick={() => handleRouteChange("/view-movie")}>
-          <ListItemIcon>
-            <LibraryBooksIcon />
-          </ListItemIcon>
-          <ListItemText primary="View Movies" />
-        </ListItem>
-      )}
-
-      {user.isAdmin && (
         <ListItem button onClick={() => handleRouteChange("/add-show")}>
           <ListItemIcon>
             <AddCircleIcon />

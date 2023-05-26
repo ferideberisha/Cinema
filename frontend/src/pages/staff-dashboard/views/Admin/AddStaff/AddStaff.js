@@ -5,12 +5,11 @@ import Paper from "@mui/material/Paper";
 import { useState } from "react";
 import { Box } from "@mui/system";
 import api from "../../../../../api/axios";
-import { useNavigate } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useForm, Controller, trigger } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
@@ -33,8 +32,6 @@ export default function AddStaff() {
   });
 
   const [isAdmin, setIsAdmin] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleAdminChange = async (event) => {
     setIsAdmin(event.target.value);

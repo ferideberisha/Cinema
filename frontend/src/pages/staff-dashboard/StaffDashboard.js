@@ -24,6 +24,7 @@ import UserList from "./views/Admin/UserList/UserList";
 import ShowList from "./views/Admin/ShowList/ShowList";
 import Messages from "./views/Admin/Messages/Messages";
 import TheaterList from "./views/Admin/TheaterList/TheaterList";
+import AddUser from "./views/Admin/AddUser/AddUser";
 
 const drawerWidth = 220;
 
@@ -120,6 +121,7 @@ function DashboardContent(props) {
               {user.isAdmin && option === "/view-staff" && <StaffList />}
               {user.isAdmin && option === "/add-theater" && <AddTheater />}
               {user.isAdmin && option === "/view-theaters" && <TheaterList />}
+              {user.isAdmin && option === "/add-user" && <AddUser />}
               {user.isAdmin && option === "/view-users" && <UserList />}
               {user.isAdmin && option === "/show-list" && <ShowList />}
               {user.isAdmin && option === "/messages" && <Messages />}
