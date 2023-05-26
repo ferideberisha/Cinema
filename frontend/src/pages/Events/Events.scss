@@ -1,0 +1,27 @@
+.events-containers {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 5rem;
+  }
+  
+  .events-item-containers {
+    position: relative;
+    margin: 24px;
+    width: 330px;
+    height: 560px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+  }
+ 
+  .events-img-containers img {
+    width: 100%;
+  }
+  
+
+
+
