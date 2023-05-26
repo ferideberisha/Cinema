@@ -5,7 +5,6 @@ import { OutlineButton } from "../components/button/Button";
 import HeroSlide from "../components/hero-slide/HeroSlide";
 import MovieList from "../components/movie-list/MovieList";
 import ContactUsModal from "../pages/Contactus/contactus";
-
 import { category, movieType } from "../api/tmdbApi";
 
 const Home = () => {
