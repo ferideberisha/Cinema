@@ -1,6 +1,8 @@
 const Staff = require("../models/staffModel");
 const Movie = require("../models/movieModel");
 const Theater = require("../models/theatersModel");
+const axios = require("axios");
+const tmdb = require("../api/tmdb");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -139,67 +141,144 @@ const staff_update = (req, res, next) => {
 };
 
 const movie_post = (req, res, next) => {
-  const movie = new Movie({
-    movieName: req.body.movieName,
-    description: req.body.description,
-    creator: req.body.creator,
-  });
+  const apiKey = tmdb.tmdbApiKey;
+  const movieId = req.body.movieId;
+  const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
 
-  movie
-    .save(movie)
-    .then(() => {
-      res.status(200).json({
-        movie,
-        message: "movie created",
+  axios
+    .get(url)
+    .then((response) => {
+      const movieData = response.data;
+      const runtime = movieData.runtime;
+
+      const movie = new Movie({
+        id: movieData.id,
+        title: movieData.title,
+        duration: runtime,
+        overview: movieData.overview,
+        original_language: movieData.original_language,
+        release_date: movieData.release_date,
+        poster_path: movieData.poster_path,
+        creator: req.body.creator,
       });
+
+      movie
+        .save()
+        .then((savedMovie) => {
+          res.status(200).json({
+            movie: savedMovie,
+            message: "Movie created",
+          });
+        })
+        .catch((error) => {
+          res.status(500).json({
+            error: error.message,
+          });
+        });
     })
     .catch((error) => {
-      res.status(404).json({
-        message: error.message,
-      });
+      console.log(error);
+      res.status(500).json({ error: "An error occurred" });
     });
 };
 
 const movie_list = (req, res) => {
-  Movie.find()
-    .populate({ path: "creator", select: "name" })
-    .then((movie) => {
-      res.json(department);
-    });
-};
+  const apiKey = tmdb.tmdbApiKey;
+  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&primary_release_year=2023`;
 
-const movie_get = async (req, res) => {
-  await Movie.findById(req.params.id)
-    .populate({ path: "creator", select: "name" })
-    .then((movie) => res.json(movie));
-};
-
-const movie_delete = async (req, res) => {
-  await Movie.deleteOne({ _id: req.params.id }).then(() => {
-    res.status(200).json({
-      message: "Movie deleted",
-    });
-  });
-};
-
-const movie_update = async (req, res, next) => {
-  const movie = new Movie({
-    _id: req.params.id,
-    movieName: req.body.movieName,
-    description: req.body.description,
-    creator: req.body.creator,
-  });
-  await Movie.updateOne({ _id: req.params.id }, movie)
-    .then(() => {
-      res.status(200).json({
-        movie,
-        message: "movie updated",
-      });
+  axios
+    .get(url)
+    .then((response) => {
+      const movies = response.data.results;
+      res.json(movies);
     })
     .catch((error) => {
-      res.status(404).json({
-        message: error.message,
+      console.log(error);
+      res.status(500).json({ error: "An error occurred" });
+    });
+};
+
+const movie_get = (req, res) => {
+  const apiKey = tmdb.tmdbApiKey;
+  const movieId = req.params.id;
+  const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
+
+  axios
+    .get(url)
+    .then((response) => {
+      const movie = response.data;
+      res.json(movie);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ error: "An error occurred" });
+    });
+};
+
+const movie_delete = (req, res) => {
+  const movieId = req.params.id;
+
+  Movie.deleteOne({ _id: movieId })
+    .then((result) => {
+      if (result.deletedCount > 0) {
+        res.status(200).json({
+          message: "Movie deleted",
+        });
+      } else {
+        res.status(404).json({
+          message: "Movie not found",
+        });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({
+        error: error.message,
       });
+    });
+};
+
+const movie_update = (req, res) => {
+  const apiKey = tmdb.tmdbApiKey;
+  const movieId = req.body.movieId;
+  const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
+
+  axios
+    .get(url)
+    .then((response) => {
+      const movieData = response.data;
+
+      const updatedMovie = {
+        id: movieData.id,
+        title: movieData.title,
+        overview: movieData.overview,
+        original_language: movieData.original_language,
+        release_date: movieData.release_date,
+        poster_path: movieData.poster_path,
+        creator: req.body.creator,
+      };
+
+      Movie.findByIdAndUpdate(req.params.id, updatedMovie, { new: true })
+        .then((movie) => {
+          if (movie) {
+            res.status(200).json({
+              movie,
+              message: "Movie updated",
+            });
+          } else {
+            res.status(404).json({
+              message: "Movie not found",
+            });
+          }
+        })
+        .catch((error) => {
+          res.status(500).json({
+            error: error.message,
+          });
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ error: "An error occurred" });
     });
 };
 

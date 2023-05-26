@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const authMiddleware = require("../../middleware/authMiddleware");
-const Staff = require("../../models/staffModel");
+const tmdb = require("../../api/tmdb");
+const axios = require("axios");
 const staffController = require("../../controller/staffController");
 
 // staff auth routes
@@ -17,11 +15,11 @@ router.put("/:id", staffController.staff_update);
 router.delete("/:id", staffController.staff_delete);
 
 // movie routes
-router.post("/movie", staffController.movie_post);
-router.get("/movie/all", staffController.movie_list);
-router.get("/movie/:id", staffController.movie_get);
-router.delete("/movie/:id", staffController.movie_delete);
-router.put("/movie/:id", staffController.movie_update);
+router.post("/movies-url", staffController.movie_post);
+router.delete("/movies-url/:id", staffController.movie_delete);
+router.get("/movies-url/all", staffController.movie_list);
+router.get("/movies-url/:id", staffController.movie_get);
+router.put("/movies-url/:id", staffController.movie_update);
 
 // theater routes
 router.post("/theater", staffController.theater_post);

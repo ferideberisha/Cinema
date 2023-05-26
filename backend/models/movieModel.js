@@ -2,33 +2,34 @@ const mongoose = require("mongoose");
 
 const movieSchema = new mongoose.Schema(
   {
+    id: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     title: {
       type: String,
       required: true,
     },
-    description: {
+    overview: {
       type: String,
       required: true,
     },
-    duration: {
-      type: Number,
-      required: true,
-    },
-    genre: {
+    original_language: {
       type: String,
       required: true,
     },
-    language: {
-      type: String,
-      required: true,
-    },
-    releaseDate: {
+    release_date: {
       type: Date,
       required: true,
     },
-    poster: {
+    poster_path: {
       type: String,
       required: true,
+    },
+    creator: {
+      type: mongoose.Types.ObjectId,
+      ref: "Staff",
     },
   },
   { timestamps: true }
