@@ -1,57 +1,65 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router-dom";
 
 import "./movie-grid.scss";
 
 import MovieCard from "../movie-card/MovieCard";
 import Button, { OutlineButton } from "../button/Button";
 import Input from "../input/Input";
-
-import tmdbApi, { category, movieType } from "../../api/tmdbApi";
+import axios from "../../api/axios";
 
 const MovieGrid = (props) => {
   const [items, setItems] = useState([]);
-
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
 
-  const { keyword } = useParams();
+  const { keyword = "" } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     const getList = async () => {
-      let response = null;
-      if (keyword === undefined) {
-        const params = {};
-        response = await tmdbApi.getMoviesList(movieType.upcoming, { params });
-      } else {
-        const params = {
-          query: keyword,
-        };
-        response = await tmdbApi.search(props.category, { params });
+      try {
+        let response = null;
+        if (keyword === "") {
+          response = await axios.get("/api/movies");
+        } else {
+          response = await axios.get(`/api/search/${props.category}`, {
+            params: {
+              query: keyword,
+            },
+          });
+        }
+        setItems(response.data);
+        setTotalPage(response.data.total_pages);
+      } catch (error) {
+        console.log(error);
       }
-      setItems(response.results);
-      setTotalPage(response.total_pages);
     };
     getList();
   }, [props.category, keyword]);
 
   const loadMore = async () => {
-    let response = null;
-    if (keyword === undefined) {
-      const params = {
-        page: page + 1,
-      };
-      response = await tmdbApi.getMoviesList(movieType.upcoming, { params });
-    } else {
-      const params = {
-        page: page + 1,
-        query: keyword,
-      };
-      response = await tmdbApi.search(props.category, { params });
+    try {
+      let response = null;
+      if (keyword === "") {
+        response = await axios.get("/api/movies", {
+          params: {
+            page: page + 1,
+          },
+        });
+      } else {
+        response = await axios.get(`/api/search/${props.category}`, {
+          params: {
+            page: page + 1,
+            query: keyword,
+          },
+        });
+      }
+      setItems([...items, ...response.data]);
+      setPage(page + 1);
+    } catch (error) {
+      console.log(error);
     }
-    setItems([...items, ...response.results]);
-    setPage(page + 1);
   };
 
   return (
@@ -64,17 +72,21 @@ const MovieGrid = (props) => {
         />
       </div>
       <div className="movie-grid">
-        {items.map((item, i) => (
-          <MovieCard category={props.category} item={item} key={i} />
-        ))}
+        {items && items.length > 0 ? (
+          items.map((item, i) => (
+            <MovieCard category={props.category} item={item} key={i} />
+          ))
+        ) : (
+          <p>No items found.</p>
+        )}
       </div>
-      {page < totalPage ? (
+      {page < totalPage && (
         <div className="movie-grid__loadmore">
           <OutlineButton className="small" onClick={loadMore}>
             Load more
           </OutlineButton>
         </div>
-      ) : null}
+      )}
     </>
   );
 };
@@ -85,9 +97,9 @@ const MovieSearch = (props) => {
 
   const goToSearch = useCallback(() => {
     if (keyword.trim().length > 0) {
-      navigate(`/${category[props.category]}/search/${keyword}`);
+      navigate(`/movies/search/${keyword}`);
     }
-  }, [keyword, props.category, navigate]);
+  }, [keyword, navigate]);
 
   useEffect(() => {
     const enterEvent = (e) => {
@@ -109,6 +121,11 @@ const MovieSearch = (props) => {
         placeholder="Enter keyword"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.keyCode === 13) {
+            goToSearch();
+          }
+        }}
       />
       <Button className="small" onClick={goToSearch}>
         Search

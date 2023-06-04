@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 import Button from "../button/Button";
 
-import tmdbApi, { category } from "../../api/tmdbApi";
+import axios from "../../api/axios";
 import apiConfig from "../../api/apiConfig";
 
 import MovieCard from "../movie-card/MovieCard";
@@ -18,25 +18,22 @@ const MovieList = (props) => {
 
   useEffect(() => {
     const getList = async () => {
-      let response = null;
-      const params = {};
-
-      if (props.category === category.movie) {
-        response = await tmdbApi.getMoviesList(props.type, { params });
-      } else {
-        response = await tmdbApi.similar(props.category, props.id);
+      try {
+        const response = await axios.get("/api/movies");
+        setItems(response.data);
+      } catch (error) {
+        console.log("Error:", error);
       }
-      setItems(response.results);
     };
     getList();
-  }, [props.category, props.id, props.type]);
+  }, [props.status]);
 
   return (
     <div className="movie-list">
       <Swiper grabCursor={true} spaceBetween={10} slidesPerView={"auto"}>
         {items.map((item, i) => (
           <SwiperSlide key={i}>
-            <MovieCard item={item} category={props.category} />
+            <MovieCard item={item} status={props.status} />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -45,8 +42,8 @@ const MovieList = (props) => {
 };
 
 MovieList.propTypes = {
-  category: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
+  // category: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
 };
 
 export default MovieList;

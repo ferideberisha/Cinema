@@ -53,20 +53,19 @@ const theme = createTheme({
         root: {
           "& .MuiInputBase-root": {
             "& fieldset": {
-              borderColor: "#00366b", // Set the border color of the TextField
+              borderColor: "#00366b",
             },
             "&:hover fieldset": {
-              borderColor: "#00366b", // Set the border color on hover
+              borderColor: "#00366b",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "#00366b", // Set the border color when focused
+              borderColor: "#00366b",
             },
           },
         },
       },
     },
   },
-  shadows: ["none"], // Disable the box shadow on focused TextField
 });
 
 export default function Signup() {
@@ -97,12 +96,7 @@ export default function Signup() {
 
       dispatch(HideLoading());
 
-      if (response.data.token) {
-        setAlert({
-          message: "User created successfully",
-          severity: "success",
-        });
-      } else if (
+      if (
         response.data.msg &&
         response.data.msg.includes("Email already in use")
       ) {
@@ -112,8 +106,8 @@ export default function Signup() {
         });
       } else {
         setAlert({
-          message: "User not created",
-          severity: "error",
+          message: "User created successfully",
+          severity: "success",
         });
       }
     } catch (error) {

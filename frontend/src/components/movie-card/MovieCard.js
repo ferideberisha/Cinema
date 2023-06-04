@@ -16,13 +16,18 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import axios from "../../api/axios";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { AuthContext } from "../../context/AuthContext";
+import { useContext } from "react";
 
 const MovieCard = (props) => {
   const item = props.item;
 
-  const link = "/" + category[props.category] + "/" + item.id;
+  const link = "/movies/" + item._id;
 
   const bg = apiConfig.w500Image(item.poster_path || item.backdrop_path);
+  const [movieId, setMovieId] = useState(""); // Add movieId state
 
   const [isFavorite, setIsFavorite] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -36,25 +41,75 @@ const MovieCard = (props) => {
     useState(false);
   const [ratingAlert, setRatingAlert] = useState(false);
 
-  const toggleFavorite = () => {
-    if (!isFavorite) {
-      setIsFavorite(true);
-      setArchivedAlert(true);
-    } else {
-      setIsFavorite(false);
-      setRemovedFromFavoritesAlert(true);
+  const { user } = useAuthContext();
+
+  const likeMovie = async (movieId) => {
+    try {
+      const response = await axios.post(
+        `/api/users/${user.id}/like/${movieId}`
+      );
+      console.log("Movie liked successfully.");
+    } catch (error) {
+      console.error(error.response.data.error);
     }
   };
 
-  const toggleWatchlist = () => {
-    if (!isWatchlisted) {
-      setIsWatchlisted(true);
-      setArchivedAlert(true);
-    } else {
-      setIsWatchlisted(false);
-      setRemovedFromWatchListAlert(true);
+  const unlikeMovie = async (movieId) => {
+    try {
+      const response = await axios.delete(
+        `/api/users/${user.id}/like/${movieId}`
+      );
+      console.log("Movie unliked successfully.");
+    } catch (error) {
+      console.error(error.response.data.error);
     }
   };
+
+  // const toggleFavorite = async () => {
+  //   if (!isFavorite) {
+  //     setIsFavorite(true);
+  //     setArchivedAlert(true);
+  //     await likeMovie(movieId); // Call the likeMovie function with the movieId
+  //   } else {
+  //     setIsFavorite(false);
+  //     setRemovedFromFavoritesAlert(true);
+  //     await unlikeMovie(movieId); // Call the unlikeMovie function with the movieId
+  //   }
+  // };
+
+  const addToWatchList = async (movieId) => {
+    try {
+      const response = await axios.post(
+        `/api/users/${user.id}/watchlist/${movieId}`
+      );
+      console.log("Movie added to watchlist successfully.");
+    } catch (error) {
+      console.error(error.response.data.error);
+    }
+  };
+
+  const removedFromWatchList = async (movieId) => {
+    try {
+      const response = await axios.delete(
+        `/api/users/${user.id}/watchlist/${movieId}`
+      );
+      console.log("Movie removed from watchlist successfully.");
+    } catch (error) {
+      console.error(error.response.data.error);
+    }
+  };
+
+  // const toggleWatchlist = async () => {
+  //   if (!isWatchlisted) {
+  //     setIsWatchlisted(true);
+  //     setArchivedAlert(true);
+  //     await addToWatchList(movieId);
+  //   } else {
+  //     setIsWatchlisted(false);
+  //     setRemovedFromWatchListAlert(true);
+  //     await removedFromWatchList(movieId);
+  //   }
+  // };
 
   const handleRemovedFromFavoritesAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -86,14 +141,53 @@ const MovieCard = (props) => {
     setShowDropdown(false);
   };
 
-  const handleRatingItemClick = (ratingValue) => {
+  const addRating = async (ratingValue, movieId) => {
+    try {
+      const response = await axios.post(
+        `/api/users/${user.id}/rating/${movieId}`,
+        {
+          rating: ratingValue,
+        }
+      );
+      console.log("Rating added successfully.");
+    } catch (error) {
+      console.error(error.response.data.error);
+    }
+  };
+
+  const deleteRating = async (movieId) => {
+    try {
+      const response = await axios.delete(
+        `/api/users/${user.id}/rating/${movieId}`
+      );
+      console.log("Rating deleted successfully.");
+    } catch (error) {
+      console.error(error.response.data.error);
+    }
+  };
+
+  const handleRatingItemClick = async (ratingValue) => {
     if (rating === ratingValue) {
       setRating(0);
+      await deleteRating(item._id);
     } else {
       setRating(ratingValue);
+      await addRating(ratingValue, item._id);
     }
     setRatingAlert(true);
     handleClose();
+    const updatedItem = { ...item, stars: ratingValue };
+
+    // Send the updated item to the backend
+    try {
+      const response = await axios.put(
+        `/api/users/${user.id}/rating/${item._id}`,
+        updatedItem
+      );
+      console.log("Item updated successfully");
+    } catch (error) {
+      console.error("Error updating item:", error);
+    }
   };
 
   const handleRatingAlertClose = () => {
@@ -111,7 +205,6 @@ const MovieCard = (props) => {
         />
       );
     }
-
     return stars;
   };
 
@@ -119,12 +212,25 @@ const MovieCard = (props) => {
     setArchivedAlert(false);
   };
 
-  const handleFavoriteClick = () => {
+  const handleFavoriteClick = async () => {
     setIsFavorite(!isFavorite);
     if (!isFavorite) {
       setArchivedAlert(true);
+      await likeMovie(item._id); // Call the likeMovie function
     } else {
       setRemovedFromFavoritesAlert(true);
+      await unlikeMovie(item._id);
+    }
+  };
+
+  const handleWatchListClick = () => {
+    setIsWatchlisted(!isWatchlisted);
+    if (!isWatchlisted) {
+      setArchivedAlert(true);
+      addToWatchList(item._id); // Call the likeMovie function
+    } else {
+      setRemovedFromWatchListAlert(true);
+      removedFromWatchList(item._id);
     }
   };
 
@@ -158,7 +264,7 @@ const MovieCard = (props) => {
             {showDropdown && (
               <div className="dropdown-menu" onMouseLeave={handleClose}>
                 <ul>
-                  <li onClick={toggleWatchlist}>
+                  <li onClick={handleWatchListClick}>
                     {isWatchlisted ? (
                       <BookmarkIcon style={{ color: "#FF007F" }} />
                     ) : (
@@ -257,12 +363,12 @@ const MovieCard = (props) => {
       >
         <Alert
           onClose={handleRatingAlertClose}
-          severity="info"
+          severity="success"
           sx={{ width: "100%" }}
         >
-          {`Your rating (${rating} star${
-            rating !== 1 ? "s" : ""
-          }) has been saved`}
+          {rating > 0
+            ? `Your rating for ${item.title || item.name}: ${rating}`
+            : `Rating removed for ${item.title || item.name}`}
         </Alert>
       </Snackbar>
     </>
