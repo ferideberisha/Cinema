@@ -1,46 +1,99 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import axios from "../../api/axios";
 
-const CommentList = ({ itemId }) => {
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
+const CommentList = ({ userId, movieId }) => {
+  const [comment, setComment] = useState("");
+  const [error, setError] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const { user } = useAuthContext();
+  console.log(user);
 
-  const handleCommentSubmit = (e) => {
+  useEffect(() => {
+    fetchReviews();
+  }, [movieId]);
+
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get(
+        `/api/users/${user.id}/reviews/${movieId}`
+      );
+
+      if (response.status === 200) {
+        const reviewsData = response.data;
+        setReviews(reviewsData.reviews);
+      } else {
+        const errorData = response.data;
+        setError(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      setError("Internal server error");
+    }
+  };
+
+  const handleCommentSubmit = async (e) => {
     e.preventDefault();
-    if (newComment.trim() !== "") {
-      // Store the new comment
-      const comment = {
-        itemId,
-        text: newComment,
-        timestamp: new Date().getTime(),
-      };
-      setComments((prevComments) => [...prevComments, comment]);
-      setNewComment("");
+    try {
+      // Validate the comment
+      if (!comment) {
+        setError("Comment is required.");
+        return;
+      }
+
+      // Make a POST request to the review endpoint
+      const response = await axios.post(
+        `/api/users/${user.id}/reviews/${movieId}`,
+        {
+          comment: comment,
+        }
+      );
+
+      // Handle the response
+      if (response.status === 201) {
+        console.log("Review added successfully");
+        setComment("");
+        setError(null);
+        // Fetch the updated reviews
+        fetchReviews();
+      } else {
+        const errorData = response.data;
+        setError(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error adding review:", error);
+      setError("Internal server error");
     }
   };
 
   return (
     <div className="comment-list">
-      <form onSubmit={handleCommentSubmit}>
-        <textarea
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Write a comment..."
-        />
+      <form onSubmit={handleCommentSubmit} className="comment-form">
+        <div className="comment-input">
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Add a public comment..."
+            className="comment-textarea"
+          />
+          <button type="submit" className="comment-submit">
+            Comment
+          </button>
+        </div>
+        {error && <p className="error">{error}</p>}
       </form>
-
-      <button type="submit">Submit</button>
-      {comments.length > 0 ? (
-        <ul>
-          {comments.map((comment, index) => (
-            <li key={index}>
-              <p>{comment.text}</p>
-              <p>{comment.timestamp}</p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No comments yet.</p>
-      )}
+      <div className="reviews">
+        {reviews.map((review) => (
+          <div key={review._id} className="review">
+            <div className="review-content">
+              <label className="review-username">
+                {user.firstname + " " + user.lastname + " : "}
+              </label>
+              <label className="review-comment">{review.comment}</label>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

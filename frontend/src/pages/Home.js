@@ -5,7 +5,7 @@ import { OutlineButton } from "../components/button/Button";
 import HeroSlide from "../components/hero-slide/HeroSlide";
 import MovieList from "../components/movie-list/MovieList";
 import ContactUsModal from "../pages/Contactus/contactus";
-import { category, movieType } from "../api/tmdbApi";
+import { category, movieStatus } from "../api/tmdbApi";
 
 const Home = () => {
   return (
@@ -17,11 +17,11 @@ const Home = () => {
         <div className="section mb-3">
           <div className="section__header mb-2">
             <h2 style={{ marginBottom: "1rem" }}>Trending Movies</h2>
-            <Link to="/movie">
+            <Link to="/movies">
               <OutlineButton className="small">View more</OutlineButton>
             </Link>
           </div>
-          <MovieList category={category.movie} type={movieType.popular} />
+          <MovieList category={category.movie} status={movieStatus.RELEASED} />
         </div>
 
         <div className="section mb-3">
@@ -29,13 +29,16 @@ const Home = () => {
             <h2 style={{ marginBottom: "1rem", marginTop: "3rem" }}>
               Upcoming
             </h2>
-            <Link to="/movie">
+            <Link to="/movies">
               <OutlineButton className="small" style={{ marginBottom: "1rem" }}>
                 View more
               </OutlineButton>
             </Link>
           </div>
-          <MovieList category={category.movie} type={movieType.upcoming} />
+          <MovieList
+            category={category.movie}
+            status={movieStatus.IN_PRODUCTION}
+          />
         </div>
       </div>
     </>

@@ -1,47 +1,65 @@
 .comment-list {
-    margin-top: 20px;
-  }
-  
-  .comment-list form {
-    margin-bottom: 10px;
-  }
-  
-  .comment-list textarea {
-    width: 23.5%;
-    height: 80px;
-    resize: vertical;
-    margin-left: 10rem;
-    padding: 5px;
-    background-color: black;
-    /* background-color: rgb(55, 55, 55); */
-    color: white;
-  }
-  
-  .comment-list button {
-    padding: 5px 10px;
-    background-color: #00366b;
-    margin-left: 27.5rem;
-  }
-  
-  .comment-list ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .comment-list li {
-    margin-bottom: 10px;
-  }
-  
-  .comment-list p {
-    margin: 0;
-    margin-left: 10rem;
-  }
-  
-  .comment-list p:last-child {
-    color: white;
-    font-size: 12px;
-  }
-  
-  .section__header{
-    color: white;
-  }
+  margin: auto;
+  width:80%;
+  color: white;
+}
+
+.comment-form {
+  margin-bottom: 10px;
+}
+
+.comment-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.comment-textarea {
+  flex: 1;
+  height: 80px;
+  resize: vertical;
+  padding: 5px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.comment-submit {
+  padding: 5px 10px;
+  background-color: #00366b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 3rem;
+  margin-left: 1rem;
+}
+
+.comment-submit:hover {
+  background-color: #00214d;
+}
+
+.error {
+  margin: 0;
+  color: red;
+  font-size: 12px;
+}
+
+.reviews {
+  margin-top: 20px;
+}
+
+.review {
+  margin-bottom: 10px;
+}
+
+.review-username {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.review-comment {
+  margin: 0;
+}

@@ -28,7 +28,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FavoriteMovies(props) {
+export default function RatingList(props) {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [bar, setBar] = React.useState(false);
@@ -42,17 +42,18 @@ export default function FavoriteMovies(props) {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`/api/users/${user.id}/liked-movies`);
-      const likedMovies = response.data.likedMovies;
-      setRecords(likedMovies);
-      console.log("Liked movies", likedMovies);
+      const response = await axios.get(`/api/users/${user.id}/rating/all`);
+      const rating = response.data.rating;
+      console.log("API response:", rating); // Log the response data
+      setRecords(rating);
     } catch (error) {
       console.error(error.response.data.error);
     }
   };
 
   useEffect(() => {
-    fetchData().catch(console.error);
+    console.log("Fetching data...");
+    fetchData();
   }, []);
 
   const handleClose = () => {
@@ -77,12 +78,12 @@ export default function FavoriteMovies(props) {
     setMovieId(movieId);
   };
 
-  const deleteFavorite = async (e, movieId) => {
+  const deleteRating = async (e, movieId) => {
     console.log("User ID:", user.id);
     // console.log("Movie ID:", movieId);
 
     try {
-      await axios.delete(`/api/users/${user.id}/like/${movieId}`);
+      await axios.delete(`/api/users/${user.id}/rating/${movieId}`);
       handleClose();
       fetchData(); // Refresh the movie list after deletion
     } catch (err) {
@@ -100,15 +101,14 @@ export default function FavoriteMovies(props) {
           height: "auto",
         }}
       >
-        <h2 className="dashboard-title">View Favorite Movies</h2>
+        <h2 className="dashboard-title">View Rating</h2>
         <TableContainer>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
+                <TableCell align="center">ID</TableCell>
                 <TableCell align="center">Title</TableCell>
-                <TableCell align="center">Original Language</TableCell>
-                <TableCell align="center">Release Date</TableCell>
-                <TableCell align="center">Runtime</TableCell>
+                <TableCell align="center">Stars</TableCell>
                 <TableCell align="center"> </TableCell>
               </TableRow>
             </TableHead>
@@ -120,15 +120,7 @@ export default function FavoriteMovies(props) {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell align="center">{record?.title}</TableCell>
-                    <TableCell align="center">
-                      {record?.original_language}
-                    </TableCell>
-                    <TableCell align="center">
-                      {new Date(record?.release_date).toLocaleDateString(
-                        "en-US"
-                      )}
-                    </TableCell>
-                    <TableCell align="center">{record?.runtime}</TableCell>
+                    <TableCell align="center">{record?.stars}</TableCell>
                     <TableCell align="center">
                       <IconButton
                         onClick={() => handleClickOpen(record.movieId)}
@@ -158,17 +150,17 @@ export default function FavoriteMovies(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Remove favorite movie"}</DialogTitle>
+        <DialogTitle>{"Remove rating"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Are you sure you want to remove this favorite movie?
+            Are you sure you want to remove the rating for this movie?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>NO</Button>
           <Button
             onClick={(e) => {
-              deleteFavorite(e, movieId);
+              deleteRating(e, movieId);
             }}
           >
             YES

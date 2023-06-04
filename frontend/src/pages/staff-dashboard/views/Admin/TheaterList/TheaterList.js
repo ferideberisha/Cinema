@@ -35,6 +35,9 @@ export default function TheaterList() {
   const [id, setId] = useState("");
   const [theaterName, setTheaterName] = useState("");
   const [description, setDescription] = useState("");
+  const [address, setAddress] = useState("");
+  const [status, setStatus] = useState("");
+  const [operatingHours, setOperatingHours] = useState("");
 
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("");
@@ -45,6 +48,9 @@ export default function TheaterList() {
     const data = {
       theaterName,
       description,
+      address,
+      status,
+      operatingHours,
     };
     try {
       await api.put(`/api/staff/theater/${id}`, data).then((userData) => {
@@ -68,6 +74,9 @@ export default function TheaterList() {
         setId(id);
         setTheaterName(staff.data.theaterName);
         setDescription(staff.data.description);
+        setAddress(staff.data.address);
+        setStatus(staff.data.address);
+        setOperatingHours(staff.data.operatingHours);
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -132,6 +141,9 @@ export default function TheaterList() {
               <TableRow>
                 <TableCell align="center">Theater Name</TableCell>
                 <TableCell align="center">Description</TableCell>
+                <TableCell align="center">Address</TableCell>
+                <TableCell align="center">Status</TableCell>
+                <TableCell align="center">OperatingHours</TableCell>
                 <TableCell align="center"> </TableCell>
               </TableRow>
             </TableHead>
@@ -144,6 +156,11 @@ export default function TheaterList() {
                   >
                     <TableCell align="center">{record.theaterName}</TableCell>
                     <TableCell align="center">{record.description}</TableCell>
+                    <TableCell align="center">{record.address}</TableCell>
+                    <TableCell align="center">{record.status}</TableCell>
+                    <TableCell align="center">
+                      {record.operatingHours}
+                    </TableCell>
                     <TableCell align="center">
                       <IconButton
                         onClick={(e) => {
@@ -208,6 +225,39 @@ export default function TheaterList() {
                 multiline
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                helperText=" "
+                maxRows={5}
+                required
+              />
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Address"
+                fullWidth
+                multiline
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                helperText=" "
+                maxRows={5}
+                required
+              />
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Status"
+                fullWidth
+                multiline
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                helperText=" "
+                maxRows={5}
+                required
+              />
+              <TextField
+                id="outlined-multiline-flexible"
+                label="OperatingHours"
+                fullWidth
+                multiline
+                value={operatingHours}
+                onChange={(e) => setOperatingHours(e.target.value)}
                 helperText=" "
                 maxRows={5}
                 required

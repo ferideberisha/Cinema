@@ -7,33 +7,29 @@ import { Box } from "@mui/system";
 import axios from "../../../../../api/axios";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
 
-export default function AddMovie() {
-  const [title, setTitle] = useState("");
-  const [overview, setOverview] = useState("");
-  const [original_language, setOriginalLanguage] = useState("");
-  const [release_date, setReleaseDate] = useState("");
-  const [image, setImage] = useState("");
+export default function AddEvent() {
+  const [eventsName, setEventsName] = useState("");
+  const [description, setDescription] = useState("");
+  const [dateRange, setDateRange] = useState([]);
   const { user } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const dateRangeArray = dateRange.map((dateString) => new Date(dateString));
+
     const data = {
-      title,
-      overview,
-      original_language,
-      release_date,
-      image,
+      eventsName,
+      description,
+      dateRange: dateRangeArray,
       creator: user.id,
     };
 
     try {
-      await axios.post("/api/staff/movies-url", data);
-      setTitle("");
-      setOverview("");
-      setOriginalLanguage("");
-      setReleaseDate("");
-      setImage("");
+      await axios.post("/api/staff/events", data);
+      setEventsName("");
+      setDescription("");
+      setDateRange([]);
     } catch (err) {
       console.log(`Error: ${err.message}`);
     }
@@ -50,7 +46,7 @@ export default function AddMovie() {
           height: "auto",
         }}
       >
-        <h2 className="dashboard-title">New Movie</h2>
+        <h2 className="dashboard-title">New Event</h2>
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -61,22 +57,22 @@ export default function AddMovie() {
           <div>
             <TextField
               id="outlined-multiline-flexible"
-              label="Movie Name"
+              label="Events Name"
               fullWidth
               multiline
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={eventsName}
+              onChange={(e) => setEventsName(e.target.value)}
               helperText=" "
               maxRows={5}
               required
             />
             <TextField
               id="outlined-multiline-flexible"
-              label="Overview"
+              label="Description"
               fullWidth
               multiline
-              value={overview}
-              onChange={(e) => setOverview(e.target.value)}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               helperText=" "
               maxRows={5}
               required
@@ -84,29 +80,18 @@ export default function AddMovie() {
 
             <TextField
               id="outlined-multiline-flexible"
-              label="original_language"
+              label="dateRange"
               fullWidth
               multiline
-              value={original_language}
-              onChange={(e) => original_language(e.target.value)}
-              helperText=" "
-              maxRows={5}
-              required
-            />
-            <TextField
-              id="outlined-multiline-flexible"
-              label="image"
-              fullWidth
-              multiline
-              value={image}
-              onChange={(e) => image(e.target.value)}
+              value={dateRange.join(",")}
+              onChange={(e) => setDateRange(e.target.value.split(","))}
               helperText=" "
               maxRows={5}
               required
             />
           </div>
           <Button type="submit" variant="contained" sx={{ mt: 0, mb: 5 }}>
-            Add Movie
+            Add Event
           </Button>
         </Box>
       </Paper>

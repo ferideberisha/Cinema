@@ -13,6 +13,7 @@ import ClientRoutes from "./routes/ClientRoutes";
 import MyTickets from "./views/MyTickets/myTickets";
 import FavoriteMovies from "./views/FavoriteMovies/favoriteMovies";
 import WatchList from "./views/WatchList/watchList";
+import RatingList from "./views/RatingList/RatingList";
 import Profile from "./views/Profile/profile";
 import { useNavigate } from "react-router-dom";
 
@@ -106,6 +107,7 @@ function DashboardContent(props) {
               {option === "/my-tickets" && <MyTickets />}
               {option === "/favorite-movies" && <FavoriteMovies />}
               {option === "/watch-list" && <WatchList />}
+              {option === "/rating-list" && <RatingList />}
             </Grid>
           </Container>
         </Box>

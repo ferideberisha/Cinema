@@ -1,29 +1,37 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-
-import tmdbApi from "../../api/tmdbApi";
 import apiConfig from "../../api/apiConfig";
-
 import "./detail.scss";
-import CastList from "./CastList";
-import VideoList from "./VideoList";
-import MovieList from "../../components/movie-list/MovieList";
 import CommentList from "./CommentList";
 import "./commentList.css";
+import axios from "../../api/axios";
+import { Link } from "react-router-dom";
+import Button from "../../components/button/Button";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const Detail = () => {
-  const { category, id } = useParams();
+  const link = "/theaters";
+  const { id } = useParams();
+  const { user } = useAuthContext();
+  console.log("User ID:", user.id);
 
   const [item, setItem] = useState(null);
 
   useEffect(() => {
     const getDetail = async () => {
-      const response = await tmdbApi.detail(category, id, { params: {} });
-      setItem(response);
-      window.scrollTo(0, 0);
+      try {
+        const response = await axios.get(`/api/movies/${id}`);
+        const data = response.data;
+        data.genre_ids = data.genre_ids.split(", ");
+        setItem(data);
+        window.scrollTo(0, 0);
+      } catch (error) {
+        console.log(error);
+      }
     };
+
     getDetail();
-  }, [category, id]);
+  }, [id]);
 
   return (
     <>
@@ -51,32 +59,31 @@ const Detail = () => {
             <div className="movie-content__info">
               <h1 className="title">{item.title || item.name}</h1>
               <div className="genres">
-                {item.genres &&
-                  item.genres.slice(0, 5).map((genre, i) => (
+                {item.genre_ids &&
+                  item.genre_ids.slice(0, 5).map((genreId, i) => (
                     <span key={i} className="genres__item">
-                      {genre.name}
+                      {genreId}
                     </span>
                   ))}
               </div>
               <p className="overview">{item.overview}</p>
-              <div className="cast">
-                <div className="section__header">
-                  <h2>Casts</h2>
-                </div>
-                <CastList id={item.id} />
+              <div>
+                <Link to={link}>
+                  <Button>
+                    <i className="bx bx-play"></i>
+                    Book
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
+
           <div className="section mb-3">
             <div className="section__header mb-2">
-              <h2 style={{ marginLeft: "10rem" }}>Comments</h2>
+              <h2 style={{ marginLeft: "10rem", color: "white" }}>Comments</h2>
             </div>
-            <CommentList itemId={item.id} />{" "}
-          </div>
-          <div className="container">
-            <div className="section mb-3">
-              <VideoList id={item.id} />
-            </div>
+            <CommentList movieId={id} />{" "}
+            {/* Pass the movieId from URL parameters */}
           </div>
         </>
       )}
