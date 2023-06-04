@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -59,9 +58,9 @@ function App() {
             <Route path="/theaters4" element={<Theaters4 />} />
             <Route path="/theaters5" element={<Theaters5 />} />
             <Route path="/events" element={<Events />} />
-            <Route path="/:category/search/:keyword" element={<Catalog />} />
-            <Route path="/:category/:id" element={<Detail />} />
-            <Route path="/:category" element={<Catalog />} />
+            <Route path="/:status/search/:keyword" element={<Catalog />} />
+            <Route path="/movies/:id" element={<Detail />} />
+            <Route path="/:status" element={<Catalog />} />
 
             {/* {Login/Register Routes} */}
             <Route
@@ -83,6 +82,45 @@ function App() {
                   <Navigate to="/staff/dashboard" />
                 ) : (
                   <ClientDashboard option={""} />
+                )
+              }
+            />
+
+            <Route
+              path="/user/dashboard/favorite-movies"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : user.isStaff ? (
+                  <Navigate to="/staff/dashboard" />
+                ) : (
+                  <ClientDashboard option={"/favorite-movies"} />
+                )
+              }
+            />
+
+            <Route
+              path="/user/dashboard/watch-list"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : user.isStaff ? (
+                  <Navigate to="/staff/dashboard" />
+                ) : (
+                  <ClientDashboard option={"/watch-list"} />
+                )
+              }
+            />
+
+            <Route
+              path="/user/dashboard/rating-list"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : user.isStaff ? (
+                  <Navigate to="/staff/dashboard" />
+                ) : (
+                  <ClientDashboard option={"/rating-list"} />
                 )
               }
             />
@@ -154,6 +192,33 @@ function App() {
               }
             />
 
+            {/* {Add/View Movies routes} */}
+            <Route
+              path="/staff/dashboard/add-movie"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/add-movie"} />
+                )
+              }
+            />
+
+            <Route
+              path="/staff/dashboard/view-movies"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/view-movies"} />
+                )
+              }
+            />
+
             {/* {Add/View Theater routes} */}
             <Route
               path="/staff/dashboard/add-theater"
@@ -177,6 +242,33 @@ function App() {
                   <Navigate to="/user/dashboard" />
                 ) : (
                   <StaffDashboard option={"/view-theaters"} />
+                )
+              }
+            />
+
+            {/* {Add/View Events routes} */}
+            <Route
+              path="/staff/dashboard/add-events"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/add-events"} />
+                )
+              }
+            />
+
+            <Route
+              path="/staff/dashboard/view-events"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/user/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/view-events"} />
                 )
               }
             />
