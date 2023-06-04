@@ -9,6 +9,18 @@ const theaterSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  address: {
+    type: String,
+    required: true,
+  },
+  operatingHours: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+  },
   creator: {
     type: mongoose.Types.ObjectId,
     ref: "Staff",
