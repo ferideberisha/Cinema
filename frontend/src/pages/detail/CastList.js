@@ -1,38 +1,61 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
+// import apiConfig from "../../api/apiConfig";
 
-import { useParams } from "react-router";
+// const CastList = ({ movieId }) => {
+//   const [casts, setCasts] = useState([]);
+//   const [error, setError] = useState(false);
 
-import tmdbApi from "../../api/tmdbApi";
-import apiConfig from "../../api/apiConfig";
+//   useEffect(() => {
+//     console.log("Fetching cast list for movie ID:", movieId);
+//     const getCredits = async () => {
+//       try {
+//         const response = await fetch(
+//           `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=65ef3d7c21044c8268020ff5731427a9`
+//         );
+//         if (response.ok) {
+//           const data = await response.json();
+//           const castList = data.cast || [];
+//           console.log("Cast List Data:", castList); // Add this line for debugging
+//           setCasts(castList.slice(0, 5));
+//         } else {
+//           setError(true);
+//         }
+//       } catch (error) {
+//         console.log(error);
+//         setError(true);
+//       }
+//     };
 
-const CastList = (props) => {
-  const { category } = useParams();
+//     console.log("Movie ID:", movieId);
+//     getCredits();
+//   }, [movieId]);
 
-  const [casts, setCasts] = useState([]);
+//   return (
+//     <div className="casts">
+//       {error ? (
+//         <p>Error loading cast list</p>
+//       ) : (
+//         casts.map((item, i) => (
+//           <div key={i} className="casts__item">
+//             {item.profile_path ? (
+//               <div
+//                 className="casts__item__img"
+//                 style={{
+//                   backgroundImage: `url(${apiConfig.w500Image(
+//                     item.profile_path
+//                   )}
+//                   )`,
+//                 }}
+//               ></div>
+//             ) : (
+//               <div className="casts__item__img--unavailable">No Image</div>
+//             )}
+//             <p className="casts__item__name">{item.name}</p>
+//           </div>
+//         ))
+//       )}
+//     </div>
+//   );
+// };
 
-  useEffect(() => {
-    const getCredits = async () => {
-      const res = await tmdbApi.credits(category, props.id);
-      setCasts(res.cast.slice(0, 5));
-    };
-    getCredits();
-  }, [category, props.id]);
-
-  return (
-    <div className="casts">
-      {casts.map((item, i) => (
-        <div key={i} className="casts__item">
-          <div
-            className="casts__item__img"
-            style={{
-              backgroundImage: `url(${apiConfig.w500Image(item.profile_path)})`,
-            }}
-          ></div>
-          <p className="casts__item__name">{item.name}</p>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-export default CastList;
+// export default CastList;

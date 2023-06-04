@@ -4,13 +4,13 @@ import { useParams } from "react-router";
 import MovieGrid from "../components/movie-grid/MovieGrid";
 
 const Catalog = () => {
-  const { category } = useParams();
+  const { status, keyword } = useParams();
 
   return (
     <>
       <div className="container">
         <div className="section mb-3">
-          <MovieGrid category={category} />
+          <MovieGrid status={status} keyword={keyword} />
         </div>
       </div>
     </>

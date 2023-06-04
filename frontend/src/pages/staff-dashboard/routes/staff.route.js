@@ -54,6 +54,15 @@ export default function MenuItems({ handleRouteChange }) {
       )}
 
       {user.isAdmin && (
+        <ListItem button onClick={() => handleRouteChange("/view-movies")}>
+          <ListItemIcon>
+            <LibraryBooksIcon />
+          </ListItemIcon>
+          <ListItemText primary="View Movies" />
+        </ListItem>
+      )}
+
+      {user.isAdmin && (
         <ListItem button onClick={() => handleRouteChange("/add-show")}>
           <ListItemIcon>
             <AddCircleIcon />
@@ -77,6 +86,24 @@ export default function MenuItems({ handleRouteChange }) {
             <LibraryBooksIcon />
           </ListItemIcon>
           <ListItemText primary="View Theaters" />
+        </ListItem>
+      )}
+
+      {user.isAdmin && (
+        <ListItem button onClick={() => handleRouteChange("/add-events")}>
+          <ListItemIcon>
+            <AddCircleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Add Event" />
+        </ListItem>
+      )}
+
+      {user.isAdmin && (
+        <ListItem button onClick={() => handleRouteChange("/view-events")}>
+          <ListItemIcon>
+            <LibraryBooksIcon />
+          </ListItemIcon>
+          <ListItemText primary="View events" />
         </ListItem>
       )}
 

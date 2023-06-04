@@ -25,6 +25,9 @@ import ShowList from "./views/Admin/ShowList/ShowList";
 import Messages from "./views/Admin/Messages/Messages";
 import TheaterList from "./views/Admin/TheaterList/TheaterList";
 import AddUser from "./views/Admin/AddUser/AddUser";
+import AddEvents from "./views/Admin/AddEvent/AddEvent";
+import EventsList from "./views/Admin/EventsList/EventsList";
+import MovieList from "./views/Admin/MovieList/MovieList";
 
 const drawerWidth = 220;
 
@@ -116,11 +119,14 @@ function DashboardContent(props) {
             <Grid container spacing={3}>
               {option === "" && <Profile />}
               {user.isAdmin && option === "/add-movie" && <AddMovie />}
+              {user.isAdmin && option === "/view-movies" && <MovieList />}
               {user.isAdmin && option === "/add-show" && <AddShow />}
               {user.isAdmin && option === "/add-staff" && <AddStaff />}
               {user.isAdmin && option === "/view-staff" && <StaffList />}
               {user.isAdmin && option === "/add-theater" && <AddTheater />}
               {user.isAdmin && option === "/view-theaters" && <TheaterList />}
+              {user.isAdmin && option === "/add-events" && <AddEvents />}
+              {user.isAdmin && option === "/view-events" && <EventsList />}
               {user.isAdmin && option === "/add-user" && <AddUser />}
               {user.isAdmin && option === "/view-users" && <UserList />}
               {user.isAdmin && option === "/show-list" && <ShowList />}

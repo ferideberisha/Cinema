@@ -34,6 +34,12 @@ export default function MenuItems({ handleRouteChange }) {
         </ListItemIcon>
         <ListItemText primary="Watch List" />
       </ListItem>
+      <ListItem button onClick={() => handleRouteChange("/rating-list")}>
+        <ListItemIcon>
+          <PlaylistAddCheckIcon />
+        </ListItemIcon>
+        <ListItemText primary="Rating List" />
+      </ListItem>
     </div>
   );
 }

@@ -28,35 +28,32 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function MovieList() {
+export default function EventsList() {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [bar, setBar] = React.useState(false);
+  const { user } = useAuthContext();
 
   const [id, setId] = useState("");
-  const [title, setTitle] = useState("");
-  const [overview, setOverview] = useState("");
-  const [original_language, setOriginalLanguage] = useState("");
-  const [release_date, setReleaseDate] = useState("");
-  const [image, setImage] = useState("");
-  const { user } = useAuthContext();
+  const [eventsName, setEventsName] = useState("");
+  const [description, setDescription] = useState("");
+  const [dateRange, setDateRange] = useState([]);
 
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("");
 
   const handleSubmit = async (e, id) => {
     e.preventDefault();
+    const dateRangeArray = dateRange.map((dateString) => new Date(dateString));
 
     const data = {
-      title,
-      overview,
-      original_language,
-      release_date,
-      image,
+      eventsName,
+      description,
+      dateRange: dateRangeArray,
       creator: user.id,
     };
     try {
-      await api.put(`/api/staff/movies-url/${id}`, data).then((userData) => {
+      await api.put(`/api/staff/events/${id}`, data).then((userData) => {
         handleClose2();
         fetchData().catch(console.error);
       });
@@ -73,12 +70,11 @@ export default function MovieList() {
   const handleClickOpen2 = async (e, id) => {
     console.log(id);
     try {
-      await api.get(`/api/staff/movies-url/${id}`).then((staff) => {
-        setTitle(staff.data.title);
-        setOverview(staff.data.overview);
-        setOriginalLanguage(staff.data.original_language);
-        setReleaseDate(staff.data.release_date);
-        setImage(staff.data.image);
+      await api.get(`/api/staff/events/${id}`).then((staff) => {
+        setId(id);
+        setEventsName(staff.data.eventsName);
+        setDescription(staff.data.description);
+        setDateRange(staff.data.dateRange);
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -105,7 +101,7 @@ export default function MovieList() {
   const [records, setRecords] = useState([]);
 
   const fetchData = async () => {
-    await api.get(`/api/staff/movies-url/all`).then((userData) => {
+    await api.get(`/api/staff/events/all`).then((userData) => {
       setRecords(userData.data);
     });
   };
@@ -114,10 +110,10 @@ export default function MovieList() {
     fetchData().catch(console.error);
   }, []);
 
-  const deleteMovie = async (e, id) => {
+  const deleteEvent = async (e, id) => {
     e.preventDefault();
     try {
-      await api.delete(`/api/staff/movies-url/${id}`).then((userData) => {
+      await api.delete(`/api/staff/events/${id}`).then((userData) => {
         handleClose();
         fetchData().catch(console.error);
       });
@@ -136,17 +132,15 @@ export default function MovieList() {
           height: "auto",
         }}
       >
-        <h2 className="dashboard-title">View Movies</h2>
+        <h2 className="dashboard-title">View Events</h2>
         <TableContainer>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">Movie ID</TableCell>
-                <TableCell align="center">Title</TableCell>
-                <TableCell align="center">Overview</TableCell>
-                <TableCell align="center">Original Language</TableCell>
-                <TableCell align="center">Release Date</TableCell>
-                <TableCell align="center">Image</TableCell>
+                <TableCell align="center">Event ID</TableCell>
+                <TableCell align="center">Event Name</TableCell>
+                <TableCell align="center">Description</TableCell>
+                <TableCell align="center">Date Range</TableCell>
                 <TableCell align="center"> </TableCell>
               </TableRow>
             </TableHead>
@@ -158,16 +152,16 @@ export default function MovieList() {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell align="center">{record?._id}</TableCell>
-                    <TableCell align="center">{record.title}</TableCell>
-                    <TableCell align="center">{record.overview}</TableCell>
+                    <TableCell align="center">{record.eventsName}</TableCell>
+                    <TableCell align="center">{record.description}</TableCell>
                     <TableCell align="center">
-                      {record.original_language}
+                      {record.dateRange.map((date) => (
+                        <div key={date}>
+                          {new Date(date).toLocaleDateString()}
+                        </div>
+                      ))}
                     </TableCell>
-                    <TableCell align="center">{record.release_date}</TableCell>
-                    <TableCell align="center">{record.image}</TableCell>
-                    <TableCell align="center">
-                      {record.operatingHours}
-                    </TableCell>
+
                     <TableCell align="center">
                       <IconButton
                         onClick={(e) => {
@@ -207,7 +201,7 @@ export default function MovieList() {
         TransitionComponent={Transition}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Edit movie"}</DialogTitle>
+        <DialogTitle>{"Edit event"}</DialogTitle>
         <DialogContent>
           <Box
             component="form"
@@ -217,54 +211,32 @@ export default function MovieList() {
           >
             <div>
               <TextField
-                label="Movie Name"
+                label="Event Name"
                 fullWidth
                 multiline
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                value={eventsName}
+                onChange={(e) => setEventsName(e.target.value)}
                 helperText=" "
                 maxRows={5}
                 required
               />
               <TextField
-                label="Overview"
+                label="Description"
                 fullWidth
                 multiline
-                value={overview}
-                onChange={(e) => setOverview(e.target.value)}
-                helperText=" "
-                maxRows={5}
-                required
-              />
-              <TextField
-                id="outlined-multiline-flexible"
-                label="original_language"
-                fullWidth
-                multiline
-                value={original_language}
-                onChange={(e) => setOriginalLanguage(e.target.value)}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 helperText=" "
                 maxRows={5}
                 required
               />
               <TextField
                 id="outlined-multiline-flexible"
-                label="release_date"
+                label="Date Range"
                 fullWidth
                 multiline
-                value={release_date}
-                onChange={(e) => setReleaseDate(e.target.value)}
-                helperText=" "
-                maxRows={5}
-                required
-              />
-              <TextField
-                id="outlined-multiline-flexible"
-                label="Image"
-                fullWidth
-                multiline
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
+                value={dateRange.join(",")}
+                onChange={(e) => setDateRange(e.target.value.split(","))}
                 helperText=" "
                 maxRows={5}
                 required
@@ -295,17 +267,17 @@ export default function MovieList() {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Delete movie"}</DialogTitle>
+        <DialogTitle>{"Delete event"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Are you sure you want to delete this movie?
+            Are you sure you want to delete this event?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>NO</Button>
           <Button
             onClick={(e) => {
-              deleteMovie(e, id);
+              deleteEvent(e, id);
             }}
           >
             YES
