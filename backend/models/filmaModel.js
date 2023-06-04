@@ -1,12 +1,7 @@
 const mongoose = require("mongoose");
 
-const movieSchema = new mongoose.Schema(
+const filmaSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     title: {
       type: String,
       required: true,
@@ -23,9 +18,8 @@ const movieSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    poster_path: {
+    image: {
       type: String,
-      required: true,
     },
     creator: {
       type: mongoose.Types.ObjectId,
@@ -35,4 +29,7 @@ const movieSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("movies", movieSchema);
+const collectionName = "filma";
+
+const Filma = new mongoose.model("Filma", filmaSchema, collectionName);
+module.exports = Filma;
