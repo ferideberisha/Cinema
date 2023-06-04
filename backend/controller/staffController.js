@@ -1,20 +1,11 @@
 const Staff = require("../models/staffModel");
-const Movie = require("../models/movieModel");
+const Filma = require("../models/filmaModel");
 const Theater = require("../models/theatersModel");
+const Event = require("../models/eventsModel");
 const axios = require("axios");
 const tmdb = require("../api/tmdb");
-
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
-const generateStaffToken = (staffId) => {
-  const staffToken = jwt.sign(
-    { id: staffId, role: "staff" },
-    process.env.STAFF_JWT_SECRET,
-    { expiresIn: "1h" }
-  );
-  return staffToken;
-};
 
 const staff_register = (req, res) => {
   const { firstname, lastname, email, password, isAdmin } = req.body;
@@ -37,10 +28,7 @@ const staff_register = (req, res) => {
         newStaff.password = hash;
 
         newStaff.save().then((staff) => {
-          const staffToken = generateStaffToken(staff.id); // Generate a staff token
-
           res.json({
-            token: staffToken,
             user: {
               id: staff.id,
               firstname: staff.firstname,
@@ -67,8 +55,8 @@ const staff_login = (req, res) => {
 
       jwt.sign(
         { id: staff.id },
-        process.env.STAFF_JWT_SECRET,
-        { expiresIn: 3600 },
+        process.env.jwt_secret,
+        { expiresIn: "1d" },
         (err, token) => {
           if (err) {
             throw err;
@@ -90,6 +78,7 @@ const staff_login = (req, res) => {
     });
   });
 };
+
 const staff_list = (req, res) => {
   Staff.find()
     .select("-password")
@@ -140,160 +129,22 @@ const staff_update = (req, res, next) => {
     });
 };
 
-const movie_post = (req, res, next) => {
-  const apiKey = tmdb.tmdbApiKey;
-  const movieId = req.body.movieId;
-  const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
-
-  axios
-    .get(url)
-    .then((response) => {
-      const movieData = response.data;
-      const runtime = movieData.runtime;
-
-      const movie = new Movie({
-        id: movieData.id,
-        title: movieData.title,
-        duration: runtime,
-        overview: movieData.overview,
-        original_language: movieData.original_language,
-        release_date: movieData.release_date,
-        poster_path: movieData.poster_path,
-        creator: req.body.creator,
-      });
-
-      movie
-        .save()
-        .then((savedMovie) => {
-          res.status(200).json({
-            movie: savedMovie,
-            message: "Movie created",
-          });
-        })
-        .catch((error) => {
-          res.status(500).json({
-            error: error.message,
-          });
-        });
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({ error: "An error occurred" });
-    });
-};
-
-const movie_list = (req, res) => {
-  const apiKey = tmdb.tmdbApiKey;
-  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&primary_release_year=2023`;
-
-  axios
-    .get(url)
-    .then((response) => {
-      const movies = response.data.results;
-      res.json(movies);
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({ error: "An error occurred" });
-    });
-};
-
-const movie_get = (req, res) => {
-  const apiKey = tmdb.tmdbApiKey;
-  const movieId = req.params.id;
-  const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
-
-  axios
-    .get(url)
-    .then((response) => {
-      const movie = response.data;
-      res.json(movie);
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({ error: "An error occurred" });
-    });
-};
-
-const movie_delete = (req, res) => {
-  const movieId = req.params.id;
-
-  Movie.deleteOne({ _id: movieId })
-    .then((result) => {
-      if (result.deletedCount > 0) {
-        res.status(200).json({
-          message: "Movie deleted",
-        });
-      } else {
-        res.status(404).json({
-          message: "Movie not found",
-        });
-      }
-    })
-    .catch((error) => {
-      res.status(500).json({
-        error: error.message,
-      });
-    });
-};
-
-const movie_update = (req, res) => {
-  const apiKey = tmdb.tmdbApiKey;
-  const movieId = req.body.movieId;
-  const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
-
-  axios
-    .get(url)
-    .then((response) => {
-      const movieData = response.data;
-
-      const updatedMovie = {
-        id: movieData.id,
-        title: movieData.title,
-        overview: movieData.overview,
-        original_language: movieData.original_language,
-        release_date: movieData.release_date,
-        poster_path: movieData.poster_path,
-        creator: req.body.creator,
-      };
-
-      Movie.findByIdAndUpdate(req.params.id, updatedMovie, { new: true })
-        .then((movie) => {
-          if (movie) {
-            res.status(200).json({
-              movie,
-              message: "Movie updated",
-            });
-          } else {
-            res.status(404).json({
-              message: "Movie not found",
-            });
-          }
-        })
-        .catch((error) => {
-          res.status(500).json({
-            error: error.message,
-          });
-        });
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({ error: "An error occurred" });
-    });
-};
-
 const theater_post = (req, res, next) => {
   const theater = new Theater({
     theaterName: req.body.theaterName,
     description: req.body.description,
+    address: req.body.address,
+    status: req.body.status,
+    operatingHours: req.body.operatingHours,
     creator: req.body.creator,
   });
+
   theater
     .save(theater)
     .then(() => {
       res.status(200).json({
         theater,
-        message: "theater created",
+        message: "Theater created",
       });
     })
     .catch((error) => {
@@ -328,6 +179,9 @@ const theater_update = async (req, res, next) => {
     _id: req.params.id,
     theaterName: req.body.theaterName,
     description: req.body.description,
+    address: req.body.address,
+    status: req.body.status,
+    operatingHours: req.body.operatingHours,
     creator: req.body.creator,
   });
   await Theater.updateOne({ _id: req.params.id }, theater)
@@ -344,6 +198,140 @@ const theater_update = async (req, res, next) => {
     });
 };
 
+const events_post = (req, res, next) => {
+  const event = new Event({
+    eventsName: req.body.eventsName,
+    description: req.body.description,
+    dateRange: req.body.dateRange,
+    creator: req.body.creator,
+  });
+
+  event
+    .save(event)
+    .then(() => {
+      res.status(200).json({
+        event,
+        message: "Event created",
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
+};
+
+const events_list = (req, res) => {
+  Event.find()
+    .populate({ path: "creator", select: "firstname" })
+    .then((event) => res.json(event));
+};
+
+const events_get = async (req, res) => {
+  await Event.findById(req.params.id)
+    .populate({ path: "creator", select: "firstname" })
+    .then((event) => res.json(event));
+};
+
+const events_delete = async (req, res) => {
+  await Event.deleteOne({ _id: req.params.id }).then(() => {
+    res.status(200).json({
+      message: "theater deleted",
+    });
+  });
+};
+
+const events_update = async (req, res, next) => {
+  const event = new Event({
+    _id: req.params.id,
+    eventsName: req.body.eventsName,
+    description: req.body.description,
+    dateRange: req.body.dateRange,
+    creator: req.body.creator,
+  });
+  await Event.updateOne({ _id: req.params.id }, event)
+    .then(() => {
+      res.status(200).json({
+        event,
+        message: "event updated",
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
+};
+
+const filma_post = (req, res, next) => {
+  const filma = new Filma({
+    title: req.body.title,
+    overview: req.body.overview,
+    original_language: req.body.original_language,
+    release_date: req.body.release_date,
+    image: req.body.image,
+  });
+
+  filma
+    .save(filma)
+    .then(() => {
+      res.status(200).json({
+        filma,
+        message: "Albanian movie created",
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
+};
+
+const filma_list = (req, res) => {
+  Filma.find()
+    .populate({ path: "creator", select: "firstname" })
+    .then((filma) => {
+      res.json(filma);
+    });
+};
+
+const filma_get = async (req, res) => {
+  await Filma.findById(req.params.id)
+    .populate({ path: "creator", select: "firstname" })
+    .then((filma) => res.json(filma));
+};
+
+const filma_delete = async (req, res) => {
+  await Filma.deleteOne({ _id: req.params.id }).then(() => {
+    res.status(200).json({
+      message: "Albanian movie deleted",
+    });
+  });
+};
+
+const filma_update = async (req, res, next) => {
+  const filma = new Filma({
+    _id: req.params.id,
+    title: req.body.title,
+    overview: req.body.overview,
+    original_language: req.body.original_language,
+    release_date: req.body.release_date,
+    image: req.body.image,
+  });
+  await Filma.updateOne({ _id: req.params.id }, filma)
+    .then(() => {
+      res.status(200).json({
+        filma,
+        message: "Albanian movie updated",
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
+};
+
 module.exports = {
   staff_register,
   staff_login,
@@ -351,14 +339,19 @@ module.exports = {
   staff_get,
   staff_delete,
   staff_update,
-  movie_list,
-  movie_get,
-  movie_delete,
-  movie_post,
-  movie_update,
   theater_delete,
   theater_get,
   theater_list,
   theater_post,
   theater_update,
+  events_delete,
+  events_get,
+  events_list,
+  events_post,
+  events_update,
+  filma_list,
+  filma_get,
+  filma_delete,
+  filma_post,
+  filma_update,
 };

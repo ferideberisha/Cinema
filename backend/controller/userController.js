@@ -1,17 +1,10 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
-const generateUserToken = (userId) => {
-  const userToken = jwt.sign(
-    { id: userId, role: "user" },
-    process.env.USER_JWT_SECRET,
-    { expiresIn: "1h" }
-  );
-  return userToken;
-};
+const Filma = require("../models/filmaModel");
 
 const user_register = (req, res) => {
+  console.log("Inside USER_REGISTER");
   const { firstname, lastname, email, password } = req.body;
 
   User.findOne({ email }).then((user) => {
@@ -34,10 +27,7 @@ const user_register = (req, res) => {
         newUser.password = hash;
 
         newUser.save().then((user) => {
-          const userToken = generateUserToken(user.id); // Generate a user token
-
           res.json({
-            token: userToken,
             user: {
               id: user.id,
               firstname: user.firstname,
@@ -53,6 +43,7 @@ const user_register = (req, res) => {
 };
 
 const user_login = (req, res) => {
+  console.log("Inside USER_LOGIN");
   const { email, password } = req.body;
 
   User.findOne({ email }).then((user) => {
@@ -61,10 +52,12 @@ const user_login = (req, res) => {
     bcrypt.compare(password, user.password).then((isMatch) => {
       if (!isMatch) return res.status(400).json({ msg: "Invalid password" });
 
+      console.log("JWT Secret:", process.env.jwt_secret);
+
       jwt.sign(
         { id: user.id },
-        process.env.USER_JWT_SECRET,
-        { expiresIn: 3600 },
+        process.env.jwt_secret,
+        { expiresIn: 31536000 },
         (err, token) => {
           if (err) throw err;
 
@@ -126,6 +119,96 @@ const user_update = (req, res, next) => {
     });
 };
 
+// const getLikedMovies = async (req, res) => {
+//   try {
+//     console.log("req.user:", req.user);
+
+//     const user = await User.findById(req.user._id).populate("likedMovies");
+//     console.log("User:", user);
+
+//     if (user) {
+//       // Return a test response
+//       res.json({ message: "Liked movies retrieved successfully" });
+//       // Or return the actual liked movies
+//       // res.json(user.likedMovies);
+//     } else {
+//       res.status(404);
+//       throw new Error("User not found");
+//     }
+//   } catch (error) {
+//     console.log("Error:", error);
+//     res.status(400).json({ message: error.message });
+//   }
+// };
+
+// const addLikedMovie = async (req, res) => {
+//   const { movieId } = req.body;
+//   console.log("Inside addLikedMovie");
+//   console.log("Movie ID:", movieId);
+
+//   try {
+//     const user = await User.findById(req.user._id).populate("likedMovies");
+//     console.log("User:", user);
+
+//     // Check if the movie is already liked by the user
+//     if (user.likedMovies.some((likedMovie) => likedMovie._id.equals(movieId))) {
+//       res.status(400);
+//       throw new Error("Movie already liked");
+//     }
+
+//     // Add the movie to the user's likedMovies array
+//     user.likedMovies.push(movieId);
+//     await user.save();
+
+//     // Update the likedBy field in the movie document
+//     const movie = await Movie.findById(movieId);
+//     if (!movie) {
+//       res.status(404);
+//       throw new Error("Movie not found");
+//     }
+//     movie.likedBy.push(user._id);
+//     await movie.save();
+
+//     res.status(201).json({ message: "Movie added to liked movies" });
+//   } catch (error) {
+//     console.log("Error:", error);
+//     res.status(400).json({ message: error.message });
+//   }
+// };
+// const deleteLikedMovies = async (req, res) => {
+//   const movieId = req.params.movieId;
+//   console.log("Inside deleteLikedMovies");
+//   console.log("Movie ID:", movieId);
+
+//   try {
+//     const user = await User.findById(req.user._id);
+//     console.log("User:", user);
+
+//     if (!user) {
+//       res.status(404);
+//       throw new Error("User not found");
+//     }
+
+//     // Find the index of the movie in the likedMovies array
+//     const movieIndex = user.likedMovies.indexOf(movieId);
+
+//     // If the movie is not found in the likedMovies array
+//     if (movieIndex === -1) {
+//       res.status(400);
+//       throw new Error("Movie not found in liked movies");
+//     }
+
+//     // Remove the movie from the likedMovies array
+//     user.likedMovies.splice(movieIndex, 1);
+//     await user.save();
+
+//     res.json({ message: "Movie removed from liked movies" });
+//   } catch (error) {
+//     console.log("Error:", error);
+//     res.status(400).json({ message: error.message });
+//   }
+// };
+
 module.exports = {
   user_register,
   user_login,
@@ -133,4 +216,7 @@ module.exports = {
   user_list,
   user_delete,
   user_update,
+  // getLikedMovies,
+  // addLikedMovie,
+  // deleteLikedMovies,
 };
