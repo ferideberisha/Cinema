@@ -7,10 +7,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Button, { OutlineButton } from "../button/Button";
 import Modal, { ModalContent } from "../modal/Modal";
 
-import tmdbApi, { category, movieType } from "../../api/tmdbApi";
+import tmdbApi, { category, movieStatus } from "../../api/tmdbApi";
 import apiConfig from "../../api/apiConfig";
 
 import "./hero-slide.scss";
+import axios from "../../api/axios";
 
 const HeroSlide = () => {
   SwiperCore.use([Autoplay]);
@@ -21,10 +22,8 @@ const HeroSlide = () => {
     const getMovies = async () => {
       const params = { page: 1 };
       try {
-        const response = await tmdbApi.getMoviesList(movieType.popular, {
-          params,
-        });
-        setMovieItems(response.results.slice(1, 4));
+        const response = await axios.get("/api/movies", params); // Replace with your own API endpoint
+        setMovieItems(response.data.slice(1, 4));
         console.log(response);
       } catch {
         console.log("error");
@@ -65,9 +64,9 @@ const HeroSlideItem = (props) => {
   );
 
   const setModalActive = async () => {
-    const modal = document.querySelector(`#modal_${item.id}`);
+    const modal = document.querySelector(`#modal_${item._id}`);
 
-    const videos = await tmdbApi.getVideos(category.movie, item.id);
+    const videos = await tmdbApi.getVideos(category.movie, item._id);
 
     if (videos.results.length > 0) {
       const videSrc = "https://www.youtube.com/embed/" + videos.results[0].key;
@@ -91,7 +90,7 @@ const HeroSlideItem = (props) => {
           <h2 className="title">{item.title}</h2>
           <div className="overview">{item.overview}</div>
           <div className="btns">
-            <Button onClick={() => navigate("/movie/" + item.id)}>
+            <Button onClick={() => navigate("/movies/" + item._id)}>
               Book a ticket
             </Button>
             <OutlineButton onClick={setModalActive}>
@@ -114,7 +113,7 @@ const TrailerModal = (props) => {
   const onClose = () => iframeRef.current.setAttribute("src", "");
 
   return (
-    <Modal active={false} id={`modal_${item.id}`}>
+    <Modal active={false} id={`modal_${item._id}`}>
       <ModalContent onClose={onClose}>
         <iframe
           ref={iframeRef}

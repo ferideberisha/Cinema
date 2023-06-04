@@ -130,7 +130,11 @@ export default function Auth() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container
+        component="main"
+        maxWidth="xs"
+        style={{ marginBottom: "6rem" }}
+      >
         <CssBaseline />
         <Box
           sx={{
