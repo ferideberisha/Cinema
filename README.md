@@ -1,5 +1,6 @@
 # Cinema
-This repository contains both the frontend and backend components of a comprehensive movie-related web application. The project showcases the application of distributed systems principles and practices. Users can engage with the website to log in, manage favorite movies, book tickets, add movies to their watchlist, view movie details, and more. Movie data is fetched from a movie database API, and user-related actions are handled through a MongoDB database.
+This repository contains both the frontend and backend components of a comprehensive movie-related web application. 
+The project showcases the application of distributed systems principles and practices. Users can engage with the website to log in, manage favorite movies, book tickets, add movies to their watchlist, view movie details, and more. Movie data is fetched from a movie database API, and user-related actions are handled through a MongoDB database.
 
 Features
 User Authentication: Users can register and log in securely to their accounts.
