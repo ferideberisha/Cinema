@@ -44,8 +44,9 @@ export default function RatingList(props) {
     try {
       const response = await axios.get(`/api/users/${user.id}/rating/all`);
       const rating = response.data.rating;
-      console.log("API response:", rating); // Log the response data
-      setRecords(rating);
+      const ratingArray = Array.isArray(rating) ? rating : [rating];
+      console.log("API response:", ratingArray); // Log the response data
+      setRecords(ratingArray);
     } catch (error) {
       console.error(error.response.data.error);
     }
@@ -106,7 +107,6 @@ export default function RatingList(props) {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">ID</TableCell>
                 <TableCell align="center">Title</TableCell>
                 <TableCell align="center">Stars</TableCell>
                 <TableCell align="center"> </TableCell>

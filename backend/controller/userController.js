@@ -81,18 +81,30 @@ const user_get = (req, res) => {
   const id = req.params.id;
   User.findById(id)
     .select("-password")
-    .then((user) => res.json(user));
+    .exec() // Execute the query
+    .then((user) => res.json(user))
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
 };
 
 const user_list = (req, res) => {
   User.find()
-    .select("-id,-password")
-    .then((user) => res.json(user));
+    .select("-id -password")
+    .exec() // Execute the query
+    .then((users) => res.json(users))
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
 };
 
 const user_delete = (req, res) => {
   const id = req.params.id;
-  User.deleteOne({ _id: req.params.id }).then((result) => {
+  User.deleteOne({ _id: id }).then((result) => {
     res.status(200).json({
       message: "user deleted",
     });
@@ -103,12 +115,13 @@ const user_update = (req, res, next) => {
   const user = new User({
     _id: req.params.id,
     firstname: req.body.firstname,
+    lastname: req.body.lastname,
     email: req.body.email,
   });
   User.updateOne({ _id: req.params.id }, user)
     .then((savedUser) => {
       res.status(200).json({
-        user,
+        savedUser,
         message: "one user updated",
       });
     })
