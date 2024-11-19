@@ -99,7 +99,7 @@ const staff_get = async (req, res) => {
 const staff_delete = (req, res) => {
   const id = req.params.id;
 
-  Staff.deleteOne({ _id: req.params.id }).then((result) => {
+  Staff.deleteOne({ _id: id }).then((result) => {
     res.status(200).json({
       message: "Staff deleted",
     });

@@ -37,5 +37,6 @@ router.put("/movies-url/:id", staffController.filma_update);
 
 // use routes
 router.use("/contactus", require("./contactus/contactusRoute.js"));
+router.use("/shows", require("./shows/showRoutes.js"));
 
 module.exports = router;
